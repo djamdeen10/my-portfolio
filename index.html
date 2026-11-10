@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr" class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Djam Deen — Backend Developer &amp; AI-Powered Builder</title>
+    <meta
+      name="description"
+      content="Portfolio de Djam Deen (djamdeen10), développeur backend et AI-powered builder. J'aime les outils utiles et cools, le code propre, les chats et les grosses idées."
+    />
+    <meta name="author" content="Djam Deen" />
+    <meta
+      name="keywords"
+      content="Djam Deen,djamdeen10,Portfolio,Developpeur Backend,Backend Developer,AI-Powered Builder,AgentMob,TypeScript,React,Hono,PostgreSQL,FastAPI,Node.js,Next.js,Python,Developpeur web,Application web,Site personnel"
+    />
+    <meta name="theme-color" content="#fafafa" />
+    <link rel="shortcut icon" href="/avatar.jpg" />
+    <link rel="icon" href="/avatar.jpg" />
+    <link rel="apple-touch-icon" href="/avatar.jpg" />
+    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script>
+      (function () {
+        try {
+          var key = "app-theme";
+          var stored = localStorage.getItem(key) || "system";
+          var resolved =
+            stored === "system"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : stored;
+          var root = document.documentElement;
+          root.classList.remove("light", "dark");
+          root.classList.add(resolved);
+          root.style.colorScheme = resolved;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="font-sans min-h-dvh bg-grid text-foreground">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
