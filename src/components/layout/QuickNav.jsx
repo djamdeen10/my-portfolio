@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { ROUTES } from '../lib/router.js';
-import { House, LayoutGrid, Mail, NotebookPen } from './Icons.jsx';
+import { ROUTES } from '../../lib/router.js';
+import { House, LayoutGrid, Mail, NotebookPen } from '../ui/Icons.jsx';
 
 const TAB_ICONS = {
   accueil: House,

@@ -1,7 +1,7 @@
 export const profile = {
   name: 'Djam Deen',
   handle: 'djamdeen10',
-  role: 'développeur backend',
+  role: 'Développeur backend',
   location: 'basé au Bénin.',
   email: 'djamdeen10@gmail.com',
   avatarAlt: 'Le chat de Djam Deen',
@@ -13,43 +13,48 @@ export const profile = {
   roles: ['Backend Developer', 'AI-Powered Builder', 'Cats Lover', 'Dreamer'],
 };
 
+// Liens de démonstration fictifs : remplace-les par les vraies URLs quand les
+// projets seront en ligne.
 export const projects = [
   {
+    slug: 'agentmob',
     title: 'AgentMob',
-    status: 'privé · en cours',
-    bullets: [
-      'Tes agents IA, orchestrés depuis ta poche.',
-      'Gratuit, privé et entièrement à toi.',
-      "Une expérience pensée pour rendre l'IA puissante aussi simple qu'envoyer un message.",
-    ],
-    tags: ['TypeScript', 'React', 'Hono', 'PostgreSQL'],
-    demo: null,
-    github: null,
+    description:
+      "Une app mobile pour orchestrer tes agents IA depuis ta poche. Une expérience simple, confidentielle et pensée pour rendre l'IA aussi naturelle qu'envoyer un message.",
+    cover: '/covers/agentmob.svg',
+    stack: ['TypeScript', 'React.js', 'Hono', 'PostgreSQL'],
+    demo: 'https://example.com/agentmob',
+    github: 'https://github.com/djamdeen10',
   },
   {
+    slug: 'the-lab',
     title: 'The lab',
-    status: 'prototypes',
-    bullets: [
-      "Idées à moitié finies, prototypes de nuit et petits outils qui grattent mes propres démangeaisons.",
-      'Tout ce qui survit à la nuit atterrit sur mes repos.',
-    ],
-    tags: ['JavaScript', 'TypeScript', 'Python', 'FastAPI'],
-    demo: null,
+    description:
+      'Un terrain de jeu pour les idées à moitié finies : petits outils de nuit et expérimentations qui grattent mes propres démangeaisons.',
+    cover: '/covers/the-lab.svg',
+    stack: ['JavaScript', 'TypeScript', 'Python', 'FastAPI'],
+    demo: 'https://example.com/lab',
     github: 'https://github.com/djamdeen10?tab=repositories',
-    linkLabel: 'voir les repos',
-  },
-];
-
-export const education = [
-  {
-    title: 'Institut de Formation et de Recherche en Informatique (IFRI)',
-    period: '2024',
-    description: 'Licence en Génie Logiciel — 2ᵉ année (en cours)',
   },
   {
-    title: 'Collège Classique et Moderne Robert Djidonou',
-    period: '2017 - 2024',
-    description: 'Collège et Baccalauréat Série C',
+    slug: 'nexus-api',
+    title: 'Nexus API',
+    description:
+      "Un backend modulaire pour connecter modèles, outils et automatisations. Une base propre pour construire des produits IA sans repartir de zéro.",
+    cover: '/covers/nexus.svg',
+    stack: ['TypeScript', 'Node.js', 'Hono', 'PostgreSQL'],
+    demo: 'https://example.com/nexus',
+    github: 'https://github.com/djamdeen10/nexus',
+  },
+  {
+    slug: 'pulse',
+    title: 'Pulse',
+    description:
+      "Un tableau de bord temps réel pour suivre l'activité d'un produit : métriques, événements et alertes, dans une interface calme et lisible.",
+    cover: '/covers/pulse.svg',
+    stack: ['React.js', 'TypeScript', 'FastAPI', 'SQLite'],
+    demo: 'https://example.com/pulse',
+    github: 'https://github.com/djamdeen10/pulse',
   },
 ];
 

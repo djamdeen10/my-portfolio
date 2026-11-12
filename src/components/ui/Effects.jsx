@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Moon, Sun } from './Icons.jsx';
-import { useTheme } from './ThemeProvider.jsx';
+import { useTheme } from '../ThemeProvider.jsx';
 
 export function TimeCounter({ className }) {
   const [time, setTime] = useState(() => new Date());
@@ -141,7 +141,7 @@ export function ThemeToggle() {
       title={isDark ? 'Thème clair' : 'Thème sombre'}
       aria-pressed={isDark}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      className="glass-chip glass-interactive backdrop-blur-md inline-flex h-8 w-8 items-center justify-center rounded-full text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60"
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       <span className="sr-only">{isDark ? 'Activer le thème clair' : 'Activer le thème sombre'}</span>

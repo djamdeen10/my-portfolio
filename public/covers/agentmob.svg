@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Cover AgentMob">
+  <defs>
+    <linearGradient id="am-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241708"/>
+      <stop offset="0.5" stop-color="#0c0c10"/>
+      <stop offset="1" stop-color="#160f07"/>
+    </linearGradient>
+    <radialGradient id="am-glow" cx="0.78" cy="0.3" r="0.62">
+      <stop offset="0" stop-color="#f59e0b" stop-opacity="0.45"/>
+      <stop offset="0.55" stop-color="#f59e0b" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="am-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fde68a" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#f59e0b" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="am-node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fef3c7"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="am-phone" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f59e0b" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0.02"/>
+    </linearGradient>
+    <pattern id="am-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#am-bg)"/>
+  <rect width="1200" height="675" fill="url(#am-glow)"/>
+  <rect width="1200" height="675" fill="url(#am-grid)"/>
+
+  <g transform="translate(168 142)">
+    <rect width="252" height="392" rx="44" fill="#0b0b0f" stroke="#ffffff" stroke-opacity="0.14"/>
+    <rect x="14" y="14" width="224" height="364" rx="33" fill="url(#am-phone)"/>
+    <rect x="101" y="27" width="50" height="7" rx="3.5" fill="#ffffff" fill-opacity="0.18"/>
+    <g fill="#fbbf24">
+      <rect x="36" y="72" width="148" height="10" rx="5" fill-opacity="0.8"/>
+      <rect x="36" y="98" width="94" height="8" rx="4" fill-opacity="0.35"/>
+      <rect x="36" y="132" width="180" height="54" rx="14" fill-opacity="0.12"/>
+      <rect x="36" y="198" width="180" height="54" rx="14" fill-opacity="0.08"/>
+      <rect x="36" y="264" width="118" height="8" rx="4" fill-opacity="0.3"/>
+      <rect x="36" y="288" width="148" height="8" rx="4" fill-opacity="0.18"/>
+    </g>
+    <g fill="#fbbf24">
+      <circle cx="56" cy="159" r="8"/>
+      <circle cx="56" cy="225" r="8"/>
+    </g>
+  </g>
+
+  <g fill="none" stroke="url(#am-ring)">
+    <circle cx="784" cy="336" r="236" stroke-width="1.2"/>
+    <circle cx="784" cy="336" r="172" stroke-width="1"/>
+    <circle cx="784" cy="336" r="110" stroke-width="1"/>
+  </g>
+
+  <g stroke="#f59e0b" stroke-opacity="0.32" stroke-width="1">
+    <path d="M784 336 1010 268M784 336 910 500M784 336 612 452M784 336 642 190"/>
+  </g>
+
+  <g fill="url(#am-node)">
+    <circle cx="1010" cy="268" r="8"/>
+    <circle cx="910" cy="500" r="10"/>
+    <circle cx="612" cy="452" r="6"/>
+    <circle cx="642" cy="190" r="5"/>
+    <circle cx="784" cy="100" r="7"/>
+  </g>
+
+  <circle cx="784" cy="336" r="27" fill="#f59e0b" fill-opacity="0.9"/>
+  <circle cx="784" cy="336" r="44" fill="none" stroke="#f59e0b" stroke-opacity="0.35"/>
+</svg>
