@@ -1,16 +1,17 @@
 export const profile = {
   name: 'Djam Deen',
   handle: 'djamdeen10',
-  role: 'Développeur backend',
-  location: 'basé au Bénin.',
+  role: 'Dev backend',
+  location: 'basé au Bénin',
   email: 'djamdeen10@gmail.com',
   avatarAlt: 'Le chat de Djam Deen',
   links: {
     twitter: 'https://x.com/djamdeen10',
+    facebook: 'https://www.facebook.com/djamdeen10',
     github: 'https://github.com/djamdeen10',
     repos: 'https://github.com/djamdeen10?tab=repositories',
   },
-  roles: ['Backend Developer', 'AI-Powered Builder', 'Cats Lover', 'Dreamer'],
+  roles: ['Backend Developer', 'AI-Powered Builder', 'FC Barcelona Fan', 'Cats Lover'],
 };
 
 // Liens de démonstration fictifs : remplace-les par les vraies URLs quand les
@@ -78,12 +79,6 @@ export const interests = [
       'Barcelonais de cœur. Un vrai attachement au jeu collectif, à la vision et à la culture de progression du club.',
   },
   {
-    title: 'Séries',
-    badge: 'Scorpion · POI · Chuck',
-    description:
-      "Scorpion, Person of Interest et Chuck. Des histoires de génies, de systèmes et de gens qui trouvent des solutions.",
-  },
-  {
     title: 'Mindset',
     badge: 'Dream big',
     description:
@@ -96,6 +91,6 @@ export const interests = [
 export const blogPosts = [];
 
 export const quote = {
-  text: '"Dream big. Work bigger."',
-  author: 'Djam Deen',
+  text: "« Seuls ceux qui sont assez fous pour penser qu'ils peuvent changer le monde y parviennent »",
+  author: 'Steve Jobs',
 };
