@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { blogPosts } from '../../data/content.js';
 import { FadeInText, SlideInLeft, SlideInRight, SlideUp } from '../../components/ui/Animations.jsx';
 import { Search } from '../../components/ui/Icons.jsx';
@@ -65,6 +66,69 @@ function SectionLabel({ id, children }) {
 export default function BlogPage() {
   const [query, setQuery] = useState('');
   const [theme, setTheme] = useState('Tous');
+  const reduceMotion = useReducedMotion();
+
+  const barRef = useRef(null);
+  const tabRefs = useRef(new Map());
+  const [pill, setPill] = useState({ x: 0, width: 0, ready: false });
+
+  const pillTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: 'spring', stiffness: 420, damping: 36, mass: 0.7 };
+
+  // Measures the active tab in the bar's own (unzoomed) coordinate space, so
+  // the sliding pill stays exact even with the global body zoom.
+  const measureTab = useCallback((name) => {
+    const bar = barRef.current;
+    const tab = tabRefs.current.get(name);
+    if (!bar || !tab) return null;
+
+    const barRect = bar.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    const zoom = bar.offsetWidth ? barRect.width / bar.offsetWidth : 1;
+
+    return {
+      x: (tabRect.left - barRect.left) / zoom - bar.clientLeft + bar.scrollLeft,
+      width: tabRect.width / zoom,
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const next = measureTab(theme);
+    if (next) setPill({ ...next, ready: true });
+  }, [theme, measureTab]);
+
+  useEffect(() => {
+    const update = () => {
+      const next = measureTab(theme);
+      if (next) setPill({ ...next, ready: true });
+    };
+
+    window.addEventListener('resize', update);
+    const observer =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
+    if (observer && barRef.current) observer.observe(barRef.current);
+    document.fonts?.ready.then(update).catch(() => {});
+
+    return () => {
+      window.removeEventListener('resize', update);
+      observer?.disconnect();
+    };
+  }, [theme, measureTab]);
+
+  const selectTheme = (name) => {
+    setTheme(name);
+
+    const bar = barRef.current;
+    const tab = tabRefs.current.get(name);
+    if (!bar || !tab) return;
+
+    const left = tab.offsetLeft;
+    const right = left + tab.offsetWidth;
+    if (left < bar.scrollLeft || right > bar.scrollLeft + bar.clientWidth) {
+      bar.scrollTo({ left: Math.max(0, left - 8), behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+  };
 
   const sorted = useMemo(
     () =>
@@ -127,19 +191,36 @@ export default function BlogPage() {
             </FadeInText>
 
             <FadeInText delay={0.1}>
-              <div className="mt-2 flex gap-1 overflow-x-auto rounded-full border border-neutral-200 bg-neutral-100/70 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-neutral-800 dark:bg-neutral-900/70">
+              <div
+                ref={barRef}
+                className="relative mt-2 flex gap-1 overflow-x-auto rounded-full border border-neutral-200 bg-neutral-100/70 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-neutral-800 dark:bg-neutral-900/70"
+              >
+                {pill.ready ? (
+                  <motion.span
+                    aria-hidden="true"
+                    initial={false}
+                    animate={{ x: pill.x, width: pill.width }}
+                    transition={pillTransition}
+                    className="pointer-events-none absolute bottom-1 left-0 top-1 rounded-full bg-white shadow-sm ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10"
+                  />
+                ) : null}
+
                 {themes.map((name) => {
                   const active = name === theme;
                   return (
                     <button
                       key={name}
+                      ref={(node) => {
+                        if (node) tabRefs.current.set(name, node);
+                        else tabRefs.current.delete(name);
+                      }}
                       type="button"
-                      onClick={() => setTheme(name)}
+                      onClick={() => selectTheme(name)}
                       aria-pressed={active}
                       className={[
-                        'inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-neutral-100/40',
+                        'relative z-10 inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-neutral-100/40',
                         active
-                          ? 'bg-white text-neutral-900 shadow-sm ring-1 ring-black/5 dark:bg-neutral-800 dark:text-neutral-50 dark:ring-white/10'
+                          ? 'text-neutral-900 dark:text-neutral-50'
                           : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
                       ].join(' ')}
                     >
