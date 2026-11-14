@@ -86,9 +86,61 @@ export const interests = [
   },
 ];
 
-// Ajoutez des articles ici pour remplir le blog. Exemple :
-// { title, excerpt, date, readTime, tag, href }
-export const blogPosts = [];
+// Articles d'exemple : remplace-les par tes vrais billets quand ils seront prêts.
+// Le plus récent (date) est mis en avant sur la page blog.
+export const blogPosts = [
+  {
+    slug: 'pourquoi-agentmob',
+    title: "Pourquoi j'ai construit AgentMob",
+    theme: 'AgentMob',
+    excerpt:
+      "L'idée de départ, les nuits passées dessus et ce que je voulais vraiment régler.",
+    cover: '/covers/agentmob.svg',
+    readTime: '6 min',
+    date: '2026-11-10',
+    href: '#',
+  },
+  {
+    slug: 'orchestrer-agents-ia',
+    title: 'Orchestrer des agents IA sans y perdre la tête',
+    theme: 'AgentMob',
+    excerpt: "Ce que j'ai appris en faisant travailler plusieurs agents ensemble.",
+    cover: '/covers/agentmob.svg',
+    readTime: '8 min',
+    date: '2026-11-02',
+    href: '#',
+  },
+  {
+    slug: 'backend-simple',
+    title: 'Un backend qui reste simple, même quand il grandit',
+    theme: 'Backend',
+    excerpt: "Mes règles pour garder une base lisible quand les idées s'accumulent.",
+    cover: '/covers/nexus.svg',
+    readTime: '5 min',
+    date: '2026-10-24',
+    href: '#',
+  },
+  {
+    slug: 'nuits-de-code',
+    title: "Ce que mes nuits de code m'ont appris",
+    theme: 'Coulisses',
+    excerpt: 'Les habitudes, les erreurs et les petits rituels qui font avancer un projet.',
+    cover: '/covers/the-lab.svg',
+    readTime: '4 min',
+    date: '2026-10-12',
+    href: '#',
+  },
+  {
+    slug: 'pulse-temps-reel',
+    title: 'Suivre un produit en temps réel sans bruit',
+    theme: 'Pulse',
+    excerpt: "Pourquoi j'ai voulu un tableau de bord calme, lisible et vraiment utile.",
+    cover: '/covers/pulse.svg',
+    readTime: '7 min',
+    date: '2026-09-30',
+    href: '#',
+  },
+];
 
 export const quote = {
   text: "« Seuls ceux qui sont assez fous pour penser qu'ils peuvent changer le monde y parviennent »",

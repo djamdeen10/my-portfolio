@@ -1,37 +1,107 @@
+import { useMemo, useState } from 'react';
 import { blogPosts } from '../../data/content.js';
 import { FadeInText, SlideInLeft, SlideInRight, SlideUp } from '../../components/ui/Animations.jsx';
-import { badgeClass, cardClass } from '../../components/ui/styles.js';
+import { Search } from '../../components/ui/Icons.jsx';
+import { badgeClass } from '../../components/ui/styles.js';
 import BlogEmptyState from './BlogEmptyState.jsx';
 
-function BlogPostCard({ post }) {
+const normalize = (value) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+function PostCard({ post, direction = 'left' }) {
+  const Reveal = direction === 'right' ? SlideInRight : SlideInLeft;
+
   return (
-    <a
-      href={post.href ?? '#'}
-      className={`${cardClass} block transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900`}
+    <Reveal delay={0.1}>
+      <article className="group overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+        <a
+          href={post.href ?? '#'}
+          aria-label={`Lire ${post.title}`}
+          className="relative block aspect-[16/9] overflow-hidden bg-neutral-100 dark:bg-neutral-900"
+        >
+          <img
+            src={post.cover}
+            alt={`Aperçu de ${post.title}`}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+          />
+          <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
+        </a>
+
+        <div className="p-4">
+          <h3 className="text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+            {post.title}
+          </h3>
+          <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
+            {post.readTime} de lecture
+          </p>
+          <a
+            href={post.href ?? '#'}
+            className="glass-primary glass-interactive mt-3 inline-flex h-8 items-center rounded-sm px-3 text-xs font-medium"
+          >
+            Lire l'article
+          </a>
+        </div>
+      </article>
+    </Reveal>
+  );
+}
+
+function SectionLabel({ id, children }) {
+  return (
+    <h2
+      id={id}
+      className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400"
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-          {post.title}
-        </h3>
-        {post.tag ? <span className={badgeClass}>{post.tag}</span> : null}
-      </div>
-      <p className="mt-2 text-xs leading-relaxed text-neutral-700 dark:text-neutral-300">
-        {post.excerpt}
-      </p>
-      <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
-        {[post.date, post.readTime].filter(Boolean).join(' · ')}
-      </p>
-    </a>
+      {children}
+    </h2>
   );
 }
 
 export default function BlogPage() {
+  const [query, setQuery] = useState('');
+  const [theme, setTheme] = useState('Tous');
+
+  const sorted = useMemo(
+    () =>
+      [...blogPosts].sort(
+        (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime(),
+      ),
+    [],
+  );
+
+  const themes = useMemo(
+    () => ['Tous', ...new Set(sorted.map((post) => post.theme))],
+    [sorted],
+  );
+
+  const visible = useMemo(() => {
+    const needle = normalize(query.trim());
+    return sorted.filter((post) => {
+      const matchesTheme = theme === 'Tous' || post.theme === theme;
+      const matchesQuery = !needle || normalize(post.title).includes(needle);
+      return matchesTheme && matchesQuery;
+    });
+  }, [sorted, theme, query]);
+
+  const [latest, ...others] = visible;
+  const hasPosts = sorted.length > 0;
+
   return (
     <SlideUp delay={0.2}>
       <section className="section-lines p-4">
         <FadeInText delay={0.1}>
-          <div className="mb-4 flex items-center justify-between gap-2">
-            <h1 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">Blog.</h1>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">Blog.</h1>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                Notes de dev, coulisses et idées, écrites quand j'ai quelque chose à dire.
+              </p>
+            </div>
             <span className={badgeClass}>
               {blogPosts.length
                 ? `${blogPosts.length} article${blogPosts.length > 1 ? 's' : ''}`
@@ -40,19 +110,81 @@ export default function BlogPage() {
           </div>
         </FadeInText>
 
-        {blogPosts.length > 0 ? (
-          <ul className="space-y-2">
-            {blogPosts.map((post, index) => {
-              const Reveal = index % 2 === 0 ? SlideInLeft : SlideInRight;
-              return (
-                <Reveal key={post.title} delay={0.1}>
-                  <li>
-                    <BlogPostCard post={post} />
-                  </li>
-                </Reveal>
-              );
-            })}
-          </ul>
+        {hasPosts ? (
+          <>
+            <FadeInText delay={0.1}>
+              <div className="mt-4 flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 transition-colors focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900 dark:focus-within:border-neutral-600 dark:focus-within:ring-neutral-100/10">
+                <Search className="h-4 w-4 shrink-0 text-neutral-400" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Rechercher un article"
+                  aria-label="Rechercher un article"
+                  className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
+                />
+              </div>
+            </FadeInText>
+
+            <FadeInText delay={0.1}>
+              <div className="mt-2 flex gap-1 overflow-x-auto rounded-full border border-neutral-200 bg-neutral-100/70 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-neutral-800 dark:bg-neutral-900/70">
+                {themes.map((name) => {
+                  const active = name === theme;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => setTheme(name)}
+                      aria-pressed={active}
+                      className={[
+                        'inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-neutral-100/40',
+                        active
+                          ? 'bg-white text-neutral-900 shadow-sm ring-1 ring-black/5 dark:bg-neutral-800 dark:text-neutral-50 dark:ring-white/10'
+                          : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
+                      ].join(' ')}
+                    >
+                      {name}
+                    </button>
+                  );
+                })}
+              </div>
+            </FadeInText>
+
+            {visible.length > 0 ? (
+              <div className="mt-5 space-y-5">
+                <section aria-labelledby="blog-latest">
+                  <SectionLabel id="blog-latest">Dernier article</SectionLabel>
+                  <PostCard key={latest.slug} post={latest} direction="left" />
+                </section>
+
+                {others.length > 0 ? (
+                  <section aria-labelledby="blog-others">
+                    <SectionLabel id="blog-others">Les autres articles</SectionLabel>
+                    <div className="space-y-3">
+                      {others.map((post, index) => (
+                        <PostCard
+                          key={post.slug}
+                          post={post}
+                          direction={index % 2 === 0 ? 'right' : 'left'}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+              </div>
+            ) : (
+              <FadeInText delay={0.1}>
+                <div className="mt-4 rounded-xl border border-dashed border-neutral-200 px-5 py-8 text-center dark:border-neutral-800">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-50">
+                    Aucun article trouvé.
+                  </p>
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                    Essaie un autre titre ou change de thème.
+                  </p>
+                </div>
+              </FadeInText>
+            )}
+          </>
         ) : (
           <BlogEmptyState />
         )}

@@ -34,6 +34,15 @@ export function Sun({ className, ...props }) {
   );
 }
 
+export function Search({ className, ...props }) {
+  return (
+    <svg {...strokeProps} className={className} aria-hidden="true" {...props}>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
 export function Mail({ className, ...props }) {
   return (
     <svg {...strokeProps} className={className} {...props}>
