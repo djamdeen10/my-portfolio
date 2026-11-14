@@ -1,6 +1,7 @@
 import { profile } from '../../data/content.js';
 import { FadeInText } from '../ui/Animations.jsx';
 import { ThemeToggle } from '../ui/Effects.jsx';
+import { VisitorCountry } from './VisitorCountry.jsx';
 
 export function SiteNav({ onNavigate }) {
   const goHome = (event) => {
@@ -19,7 +20,10 @@ export function SiteNav({ onNavigate }) {
         >
           {profile.handle}.
         </a>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <VisitorCountry />
+          <ThemeToggle />
+        </div>
       </nav>
     </FadeInText>
   );

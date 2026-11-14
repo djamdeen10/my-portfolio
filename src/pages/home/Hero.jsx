@@ -1,10 +1,13 @@
 import { profile } from '../../data/content.js';
+import { useVisitorGeo } from '../../lib/visitor.js';
 import { FadeInText, SlideInLeft, SlideInRight, SlideUp } from '../../components/ui/Animations.jsx';
 import { TimeCounter, TextShimmer, Typewriter } from '../../components/ui/Effects.jsx';
 import { Github, Mail, Twitter } from '../../components/ui/Icons.jsx';
 import { buttonBase, iconButtonClass, primaryButtonClass } from '../../components/ui/styles.js';
 
 export default function Hero({ onNavigate }) {
+  const { timeZone } = useVisitorGeo();
+
   const goToProjects = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -19,7 +22,10 @@ export default function Hero({ onNavigate }) {
             <TextShimmer as="p" className="text-xs" duration={2.2} spread={1.2}>
               bonjour, je suis
             </TextShimmer>
-            <TimeCounter className="glass-chip rounded-full px-2 py-0.5 text-[11px] font-mono text-neutral-500 dark:text-neutral-400" />
+            <TimeCounter
+              timeZone={timeZone}
+              className="glass-chip rounded-full px-2 py-0.5 text-[11px] font-mono text-neutral-500 dark:text-neutral-400"
+            />
           </div>
         </FadeInText>
 

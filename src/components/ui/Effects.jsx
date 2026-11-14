@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Moon, Sun } from './Icons.jsx';
 import { useTheme } from '../ThemeProvider.jsx';
 
-export function TimeCounter({ className }) {
+export function TimeCounter({ className, timeZone }) {
   const [time, setTime] = useState(() => new Date());
 
   useEffect(() => {
@@ -11,9 +11,23 @@ export function TimeCounter({ className }) {
     return () => clearInterval(interval);
   }, []);
 
+  const formatted = useMemo(() => {
+    const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+
+    try {
+      return time.toLocaleTimeString('en-US', timeZone ? { ...options, timeZone } : options);
+    } catch {
+      return time.toLocaleTimeString('en-US', options);
+    }
+  }, [time, timeZone]);
+
   return (
-    <span className={className} suppressHydrationWarning>
-      {time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+    <span
+      className={className}
+      title={timeZone ? `Heure locale · ${timeZone}` : 'Heure locale'}
+      suppressHydrationWarning
+    >
+      {formatted}
     </span>
   );
 }
