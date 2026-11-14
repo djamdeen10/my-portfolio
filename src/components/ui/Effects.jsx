@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Moon, Sun } from './Icons.jsx';
 import { useTheme } from '../ThemeProvider.jsx';
 
-export function TimeCounter({ className, timeZone }) {
+export function TimeCounter({ className, timeZone, title }) {
   const [time, setTime] = useState(() => new Date());
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function TimeCounter({ className, timeZone }) {
   return (
     <span
       className={className}
-      title={timeZone ? `Heure locale · ${timeZone}` : 'Heure locale'}
+      title={title ?? (timeZone ? `Heure locale · ${timeZone}` : 'Heure locale')}
       suppressHydrationWarning
     >
       {formatted}

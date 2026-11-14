@@ -1,13 +1,10 @@
 import { profile } from '../../data/content.js';
-import { useVisitorGeo } from '../../lib/visitor.js';
 import { FadeInText, SlideInLeft, SlideInRight, SlideUp } from '../../components/ui/Animations.jsx';
 import { TimeCounter, TextShimmer, Typewriter } from '../../components/ui/Effects.jsx';
 import { Github, Mail, Twitter } from '../../components/ui/Icons.jsx';
 import { buttonBase, iconButtonClass, primaryButtonClass } from '../../components/ui/styles.js';
 
 export default function Hero({ onNavigate }) {
-  const { timeZone } = useVisitorGeo();
-
   const goToProjects = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -18,14 +15,20 @@ export default function Hero({ onNavigate }) {
     <SlideUp>
       <header id="accueil" className="section-lines p-4 sm:p-5">
         <FadeInText delay={0.1}>
-          <div className="flex items-center justify-between">
-            <TextShimmer as="p" className="text-xs" duration={2.2} spread={1.2}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <TextShimmer as="p" className="shrink-0 whitespace-nowrap text-xs" duration={2.2} spread={1.2}>
               bonjour, je suis
             </TextShimmer>
-            <TimeCounter
-              timeZone={timeZone}
-              className="glass-chip rounded-full px-2 py-0.5 text-[11px] font-mono text-neutral-500 dark:text-neutral-400"
-            />
+            <span className="glass-chip ml-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5">
+              <TimeCounter
+                timeZone={profile.timeZone}
+                title={`Heure chez moi · ${profile.country}`}
+                className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400"
+              />
+              <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-400 dark:text-neutral-500">
+                chez moi
+              </span>
+            </span>
           </div>
         </FadeInText>
 

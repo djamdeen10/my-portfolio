@@ -3,6 +3,9 @@ export const profile = {
   handle: 'djamdeen10',
   role: 'Dev backend',
   location: 'basé au Bénin',
+  // The clock on the home page always shows the owner's time, not the visitor's.
+  timeZone: 'Africa/Porto-Novo',
+  country: 'Bénin',
   email: 'djamdeen10@gmail.com',
   avatarAlt: 'Le chat de Djam Deen',
   links: {
