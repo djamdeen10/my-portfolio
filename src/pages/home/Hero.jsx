@@ -1,7 +1,7 @@
 import { profile } from '../../data/content.js';
 import { FadeInText, SlideInLeft, SlideInRight, SlideUp } from '../../components/ui/Animations.jsx';
 import { TimeCounter, TextShimmer, Typewriter } from '../../components/ui/Effects.jsx';
-import { Github, Mail, Twitter } from '../../components/ui/Icons.jsx';
+import { Facebook, Github, Mail, Twitter } from '../../components/ui/Icons.jsx';
 import { buttonBase, iconButtonClass, primaryButtonClass } from '../../components/ui/styles.js';
 
 export default function Hero({ onNavigate }) {
@@ -88,6 +88,15 @@ export default function Hero({ onNavigate }) {
               <Mail className="h-4 w-4" />
             </a>
             <a
+              href={profile.links.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Ouvrir GitHub"
+              className={`${buttonBase} ${iconButtonClass}`}
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <a
               href={profile.links.twitter}
               target="_blank"
               rel="noreferrer"
@@ -97,13 +106,13 @@ export default function Hero({ onNavigate }) {
               <Twitter className="h-4 w-4" />
             </a>
             <a
-              href={profile.links.github}
+              href={profile.links.facebook}
               target="_blank"
               rel="noreferrer"
-              aria-label="Ouvrir GitHub"
+              aria-label="Ouvrir Facebook"
               className={`${buttonBase} ${iconButtonClass}`}
             >
-              <Github className="h-4 w-4" />
+              <Facebook className="h-4 w-4" />
             </a>
           </div>
         </SlideInRight>
