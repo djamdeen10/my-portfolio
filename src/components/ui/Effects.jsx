@@ -141,7 +141,7 @@ export function ThemeToggle() {
       title={isDark ? 'Thème clair' : 'Thème sombre'}
       aria-pressed={isDark}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="glass-chip glass-interactive backdrop-blur-md inline-flex h-8 w-8 items-center justify-center rounded-full text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60"
+      className="glass-chip glass-interactive backdrop-blur-md inline-flex h-8 w-8 items-center justify-center rounded-full text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50"
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       <span className="sr-only">{isDark ? 'Activer le thème clair' : 'Activer le thème sombre'}</span>

@@ -7,8 +7,8 @@ export default function Skills() {
     <SlideUp delay={0.3}>
       <section className="mt-5 section-lines p-4">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Stack</h3>
-          <div className="pointer-events-none hidden text-[10px] text-slate-500 dark:text-slate-400 sm:block">
+          <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">Stack</h3>
+          <div className="pointer-events-none hidden text-[10px] text-neutral-500 dark:text-neutral-400 sm:block">
             survolez les tags
           </div>
         </div>

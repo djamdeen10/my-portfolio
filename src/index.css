@@ -85,7 +85,6 @@
   --color-yellow-200: #fff085;
   --color-violet-300: #c4b4ff;
   --color-violet-700: #7008e7;
-  --color-blue-500: #3080ff;
   --color-red-600: #e40014;
 
   /* Same radius scale as the reference build (derived from --radius) */
@@ -246,11 +245,11 @@
   }
 
   .accent {
-    color: #2563eb;
+    color: var(--foreground);
   }
 
   .bg-accent {
-    background-color: #2563eb;
+    background-color: var(--foreground);
   }
 
   /* ------------------------- Liquid glass tab bar ------------------------- */
@@ -408,9 +407,9 @@
 
   .usw-liquid {
     /* Le verre de USW est un blanc laiteux posé sur son fond bleuté. Ici les
-       cartes sont blanches : on garde la même masse, teintée du fond USW
-       (hsl 229 36 92), sinon le verre disparaîtrait dans le blanc. */
-    --hl-glass-fill: rgb(227 230 242 / 0.5);
+       cartes sont blanches : on garde la même masse, en gris neutre, sinon le
+       verre disparaîtrait dans le blanc. */
+    --hl-glass-fill: rgb(228 228 228 / 0.55);
     --hl-glass-rim:
       linear-gradient(
         135deg,
@@ -426,9 +425,9 @@
     --hl-nav-pill-fill: rgb(255 255 255 / 0.55);
     --hl-nav-filter: blur(10px) brightness(0.98) saturate(1.05);
 
-    --hl-ocean-fill: rgb(29 70 252 / 0.9);
-    --hl-ocean-text: #ffffff;
-    --hl-ocean-rim:
+    --hl-primary-fill: rgb(17 17 17 / 0.9);
+    --hl-primary-text: #ffffff;
+    --hl-primary-rim:
       linear-gradient(
         135deg,
         rgb(255 255 255 / 0.57),
@@ -455,8 +454,9 @@
     --hl-nav-pill-fill: rgb(255 255 255 / 0.16);
     --hl-nav-filter: blur(10px) brightness(1.04) saturate(1.05);
 
-    --hl-ocean-fill: rgb(64 99 252 / 0.9);
-    --hl-ocean-rim:
+    --hl-primary-fill: rgb(250 250 250 / 0.92);
+    --hl-primary-text: #0a0a0a;
+    --hl-primary-rim:
       linear-gradient(
         135deg,
         rgb(255 255 255 / 0.285),
@@ -481,8 +481,8 @@
   }
 
   .usw-liquid .glass-primary {
-    background: var(--hl-ocean-fill);
-    color: var(--hl-ocean-text);
+    background: var(--hl-primary-fill);
+    color: var(--hl-primary-text);
   }
 
   .usw-liquid .glass-chip::before,
@@ -506,7 +506,7 @@
   }
 
   .usw-liquid .glass-primary::before {
-    background: var(--hl-ocean-rim);
+    background: var(--hl-primary-rim);
   }
 
   .usw-liquid .glass-chip.glass-interactive:hover {

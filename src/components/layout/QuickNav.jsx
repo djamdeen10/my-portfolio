@@ -40,7 +40,7 @@ export function QuickNav({ active = 'accueil', onNavigate }) {
               onClick={(event) => handleClick(event, route.path)}
               whileTap={{ scale: 0.92 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              className="group relative flex select-none flex-col items-center justify-center gap-1 rounded-[19px] py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60"
+              className="group relative flex select-none flex-col items-center justify-center gap-1 rounded-[19px] py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50"
             >
               {isActive && (
                 <motion.span

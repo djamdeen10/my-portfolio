@@ -3,7 +3,7 @@ import { ExternalLink, Github } from '../../components/ui/Icons.jsx';
 import { StackChip } from '../../components/ui/StackChip.jsx';
 
 const actionClass =
-  'glass-chip glass-interactive inline-flex h-7 w-7 items-center justify-center rounded-sm text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 dark:text-neutral-200';
+  'glass-chip glass-interactive inline-flex h-7 w-7 items-center justify-center rounded-sm text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
 
 export default function ProjectCard({ project, direction = 'left', delay = 0.1 }) {
   const Reveal = direction === 'right' ? SlideInRight : SlideInLeft;

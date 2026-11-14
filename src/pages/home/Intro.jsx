@@ -7,7 +7,7 @@ export default function Intro() {
         <p>
           Dev backend, adepte des nuits calmes, des grosses idées et du code qui marche du premier
           coup.{' '}
-          <span className="rounded-md bg-yellow-200/70 px-1.5 py-0.5 text-[12px] font-medium text-neutral-900 dark:bg-yellow-200/15 dark:text-neutral-100">
+          <span className="rounded-md bg-neutral-200/70 px-1.5 py-0.5 text-[12px] font-medium text-neutral-900 dark:bg-white/10 dark:text-neutral-100">
             J'aime les outils utiles et cools — parfois même jolis — et je laisse l'IA faire le gros
             du travail.
           </span>{' '}
