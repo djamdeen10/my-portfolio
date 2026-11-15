@@ -42,7 +42,7 @@ function PostCard({ post, direction = 'left' }) {
           </p>
           <a
             href={post.href ?? '#'}
-            className="glass-primary glass-interactive mt-3 inline-flex h-8 items-center rounded-sm px-3 text-xs font-medium"
+            className="glass-primary glass-interactive mt-3 inline-flex h-8 w-full items-center justify-center rounded-sm px-3 text-xs font-medium"
           >
             Lire l'article
           </a>

@@ -5,8 +5,15 @@ import { StackChip } from '../../components/ui/StackChip.jsx';
 const actionClass =
   'glass-chip glass-interactive inline-flex h-7 w-7 items-center justify-center rounded-sm text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
 
-export default function ProjectCard({ project, direction = 'left', delay = 0.1 }) {
+export default function ProjectCard({ project, direction = 'left', delay = 0.1, onNavigate }) {
   const Reveal = direction === 'right' ? SlideInRight : SlideInLeft;
+  const detailsHref = project.slug ? `/projet/${project.slug}` : '/projet';
+
+  const openDetails = (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onNavigate?.(detailsHref);
+  };
 
   return (
     <Reveal delay={delay}>
@@ -68,6 +75,14 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1 }
               ))}
             </div>
           ) : null}
+
+          <a
+            href={detailsHref}
+            onClick={openDetails}
+            className="glass-primary glass-interactive mt-4 inline-flex w-full items-center justify-center gap-1 rounded-sm px-3 py-1.5 text-sm font-medium"
+          >
+            Plus de détails -&gt;
+          </a>
         </div>
       </article>
     </Reveal>

@@ -3,7 +3,7 @@ import { FadeInText, SlideUp } from '../../components/ui/Animations.jsx';
 import { badgeClass } from '../../components/ui/styles.js';
 import ProjectCard from './ProjectCard.jsx';
 
-export default function ProjectsPage() {
+export default function ProjectsPage({ onNavigate }) {
   return (
     <SlideUp delay={0.2}>
       <section className="section-lines p-4">
@@ -30,6 +30,7 @@ export default function ProjectsPage() {
               project={project}
               direction={index % 2 === 1 ? 'right' : 'left'}
               delay={index === 0 ? 0.1 : 0.2}
+              onNavigate={onNavigate}
             />
           ))}
         </div>

@@ -14,7 +14,22 @@ function normalize(pathname) {
 
 export function routeFor(pathname) {
   const normalized = normalize(pathname);
-  return ROUTES.find((route) => route.path === normalized) ?? ROUTES[0];
+  const exact = ROUTES.find((route) => route.path === normalized);
+  if (exact) return exact;
+
+  // Project detail pages live under /projet/{slug} without a static entry.
+  const detail = normalized.match(/^\/projet\/([a-z0-9-]+)$/i);
+  if (detail) {
+    return {
+      id: 'projet-detail',
+      path: normalized,
+      slug: detail[1].toLowerCase(),
+      label: 'Projet',
+      title: 'Projet',
+    };
+  }
+
+  return ROUTES[0];
 }
 
 export function useAppRouter() {
