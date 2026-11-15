@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider } from './components/ThemeProvider.jsx';
 import { SiteNav } from './components/layout/SiteNav.jsx';
+import { DesktopSidebar } from './components/layout/DesktopSidebar.jsx';
 import { QuickNav } from './components/layout/QuickNav.jsx';
 import { QuoteCard } from './components/layout/QuoteCard.jsx';
 import HomePage from './pages/home/HomePage.jsx';
@@ -37,10 +38,12 @@ export default function App() {
   return (
     <ThemeProvider>
       <div className="usw-liquid min-h-dvh">
-        <main className="bg-grid min-h-dvh pb-32 pt-6 dark:bg-neutral-950">
+        <DesktopSidebar active={route.id === 'projet-detail' ? 'projet' : route.id} onNavigate={navigate} />
+
+        <main className="bg-grid min-h-dvh pb-32 pt-6 dark:bg-neutral-950 lg:pb-16 lg:pl-[261px] lg:pr-[26px] lg:pt-12 xl:pl-[287px]">
           <SiteNav onNavigate={navigate} />
 
-          <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8">
+          <div className="mx-auto max-w-xl px-4 md:px-6 lg:max-w-none lg:px-0">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={`${route.id}:${route.slug ?? ''}`}
@@ -53,7 +56,7 @@ export default function App() {
                   aria-label={route.title}
                   className="relative rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950"
                 >
-                  <div className="p-4 md:p-6 lg:p-6">
+                  <div className="p-4 md:p-6 lg:p-7">
                     <Page onNavigate={navigate} slug={route.slug} />
                   </div>
                 </article>

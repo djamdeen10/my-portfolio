@@ -12,7 +12,7 @@ export function SiteNav({ onNavigate }) {
 
   return (
     <FadeInText>
-      <nav className="mx-auto mb-4 flex w-full max-w-xl items-center justify-between px-4 text-xs text-neutral-600 dark:text-neutral-300 md:px-6 lg:px-8">
+      <nav className="mx-auto mb-4 flex w-full max-w-xl items-center justify-between px-4 text-xs text-neutral-600 dark:text-neutral-300 md:px-6 lg:hidden">
         <a
           href="/"
           onClick={goHome}

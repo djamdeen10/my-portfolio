@@ -21,7 +21,7 @@ export function QuickNav({ active = 'accueil', onNavigate }) {
       initial={{ y: 90, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 380, damping: 30, delay: 0.25 }}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden"
     >
       <nav
         aria-label="Navigation principale"

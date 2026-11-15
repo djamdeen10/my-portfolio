@@ -17,7 +17,7 @@ function PostCard({ post, direction = 'left' }) {
 
   return (
     <Reveal delay={0.1}>
-      <article className="group overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+      <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
         <a
           href={post.href ?? '#'}
           aria-label={`Lire ${post.title}`}
@@ -33,19 +33,21 @@ function PostCard({ post, direction = 'left' }) {
           <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
         </a>
 
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-4">
           <h3 className="text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
             {post.title}
           </h3>
           <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
             {post.readTime} de lecture
           </p>
-          <a
-            href={post.href ?? '#'}
-            className="glass-primary glass-interactive mt-3 inline-flex h-8 w-full items-center justify-center rounded-sm px-3 text-xs font-medium"
-          >
-            Lire l'article
-          </a>
+          <div className="mt-auto pt-3">
+            <a
+              href={post.href ?? '#'}
+              className="glass-primary glass-interactive inline-flex h-8 w-full items-center justify-center rounded-sm px-3 text-xs font-medium"
+            >
+              Lire l'article
+            </a>
+          </div>
         </div>
       </article>
     </Reveal>
@@ -241,7 +243,7 @@ export default function BlogPage() {
                 {others.length > 0 ? (
                   <section aria-labelledby="blog-others">
                     <SectionLabel id="blog-others">Les autres articles</SectionLabel>
-                    <div className="space-y-3">
+                    <div className="grid gap-3 lg:grid-cols-2">
                       {others.map((post, index) => (
                         <PostCard
                           key={post.slug}

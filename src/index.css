@@ -217,7 +217,7 @@
     background-color: var(--grid-bg);
     background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-    background-position: top;
+    background-position: left top;
     background-size: 26px 26px;
     background-attachment: fixed;
   }

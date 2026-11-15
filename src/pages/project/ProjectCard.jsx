@@ -17,7 +17,7 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
 
   return (
     <Reveal delay={delay}>
-      <article className="group overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+      <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
         {project.cover ? (
           <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
             <img
@@ -31,7 +31,7 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
           </div>
         ) : null}
 
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-4">
           <div className="flex items-start justify-between gap-3">
             <h3 className="min-w-0 truncate text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
               {project.title}
@@ -76,13 +76,15 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
             </div>
           ) : null}
 
-          <a
-            href={detailsHref}
-            onClick={openDetails}
-            className="glass-primary glass-interactive mt-4 inline-flex w-full items-center justify-center gap-1 rounded-sm px-3 py-1.5 text-sm font-medium"
-          >
-            Plus de détails -&gt;
-          </a>
+          <div className="mt-auto pt-4">
+            <a
+              href={detailsHref}
+              onClick={openDetails}
+              className="glass-primary glass-interactive inline-flex w-full items-center justify-center gap-1 rounded-sm px-3 py-1.5 text-sm font-medium"
+            >
+              Plus de détails -&gt;
+            </a>
+          </div>
         </div>
       </article>
     </Reveal>
