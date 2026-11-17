@@ -9,10 +9,9 @@ export default function HomePage({ onNavigate }) {
     <>
       <Hero onNavigate={onNavigate} />
 
-      <div className="xl:grid xl:grid-cols-2 xl:items-stretch xl:gap-5">
-        <Intro />
-        <Skills />
-      </div>
+      <Intro />
+
+      <Skills />
 
       <CurrentWork onNavigate={onNavigate} />
 
