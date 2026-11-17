@@ -62,6 +62,13 @@ export const projects = [
   },
 ];
 
+// Projet mis en avant sur l'accueil (« En ce moment ») : celui sur lequel je
+// travaille actuellement. Change juste le slug pour mettre un autre projet en avant.
+export const currentWork = {
+  slug: 'agentmob',
+  status: 'En cours',
+};
+
 export const interests = [
   {
     title: 'Musique',
