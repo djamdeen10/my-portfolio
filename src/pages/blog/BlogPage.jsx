@@ -12,16 +12,24 @@ const normalize = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
-function PostCard({ post, direction = 'left' }) {
+function PostCard({ post, direction = 'left', featured = false }) {
   const Reveal = direction === 'right' ? SlideInRight : SlideInLeft;
 
   return (
     <Reveal delay={0.1}>
-      <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+      <article
+        className={[
+          'group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950',
+          featured ? 'lg:flex-row' : '',
+        ].join(' ')}
+      >
         <a
           href={post.href ?? '#'}
           aria-label={`Lire ${post.title}`}
-          className="relative block aspect-[16/9] overflow-hidden bg-neutral-100 dark:bg-neutral-900"
+          className={[
+            'relative block aspect-[16/9] overflow-hidden bg-neutral-100 dark:bg-neutral-900',
+            featured ? 'lg:aspect-auto lg:w-[46%] lg:shrink-0' : '',
+          ].join(' ')}
         >
           <img
             src={post.cover}
@@ -33,17 +41,30 @@ function PostCard({ post, direction = 'left' }) {
           <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
         </a>
 
-        <div className="flex flex-1 flex-col p-4">
-          <h3 className="text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+        <div className={['flex flex-1 flex-col p-4', featured ? 'lg:justify-center lg:p-8' : ''].join(' ')}>
+          <h3
+            className={[
+              'text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50',
+              featured ? 'lg:text-2xl' : '',
+            ].join(' ')}
+          >
             {post.title}
           </h3>
           <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
             {post.readTime} de lecture
           </p>
-          <div className="mt-auto pt-3">
+          <div
+            className={[
+              'mt-auto pt-3',
+              featured ? 'lg:mt-6 lg:pt-0' : '',
+            ].join(' ')}
+          >
             <a
               href={post.href ?? '#'}
-              className="glass-primary glass-interactive inline-flex h-8 w-full items-center justify-center rounded-sm px-3 text-xs font-medium"
+              className={[
+                'glass-primary glass-interactive inline-flex h-8 w-full items-center justify-center rounded-sm px-3 text-xs font-medium',
+                featured ? 'lg:w-auto lg:px-5' : '',
+              ].join(' ')}
             >
               Lire l'article
             </a>
@@ -178,25 +199,26 @@ export default function BlogPage() {
 
         {hasPosts ? (
           <>
-            <FadeInText delay={0.1}>
-              <div className="mt-4 flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 transition-colors focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900 dark:focus-within:border-neutral-600 dark:focus-within:ring-neutral-100/10">
-                <Search className="h-4 w-4 shrink-0 text-neutral-400" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Rechercher un article"
-                  aria-label="Rechercher un article"
-                  className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
-                />
-              </div>
-            </FadeInText>
+            <div className="xl:mt-4 xl:flex xl:items-center xl:gap-3">
+              <FadeInText delay={0.1} className="xl:order-2 xl:ml-auto xl:w-72 xl:shrink-0 2xl:w-80">
+                <div className="mt-4 flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 transition-colors focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-900/10 xl:mt-0 dark:border-neutral-800 dark:bg-neutral-900 dark:focus-within:border-neutral-600 dark:focus-within:ring-neutral-100/10">
+                  <Search className="h-4 w-4 shrink-0 text-neutral-400" />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Rechercher un article"
+                    aria-label="Rechercher un article"
+                    className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
+                  />
+                </div>
+              </FadeInText>
 
-            <FadeInText delay={0.1}>
-              <div
-                ref={barRef}
-                className="relative mt-2 flex gap-1 overflow-x-auto rounded-full border border-neutral-200 bg-neutral-100/70 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-neutral-800 dark:bg-neutral-900/70"
-              >
+              <FadeInText delay={0.1} className="xl:order-1 xl:min-w-0">
+                <div
+                  ref={barRef}
+                  className="relative mt-2 flex gap-1 overflow-x-auto rounded-full border border-neutral-200 bg-neutral-100/70 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:mt-0 dark:border-neutral-800 dark:bg-neutral-900/70"
+                >
                 {pill.ready ? (
                   <motion.span
                     aria-hidden="true"
@@ -230,14 +252,15 @@ export default function BlogPage() {
                     </button>
                   );
                 })}
-              </div>
-            </FadeInText>
+                </div>
+              </FadeInText>
+            </div>
 
             {visible.length > 0 ? (
               <div className="mt-5 space-y-5">
                 <section aria-labelledby="blog-latest">
                   <SectionLabel id="blog-latest">Dernier article</SectionLabel>
-                  <PostCard key={latest.slug} post={latest} direction="left" />
+                  <PostCard key={latest.slug} post={latest} direction="left" featured />
                 </section>
 
                 {others.length > 0 ? (

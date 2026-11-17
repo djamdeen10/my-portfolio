@@ -23,7 +23,7 @@ export default function ProjectsPage({ onNavigate }) {
           </div>
         </FadeInText>
 
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        <div className="mt-3 grid gap-3 lg:grid-cols-2 2xl:grid-cols-4">
           {projects.map((project, index) => (
             <ProjectCard
               key={project.slug ?? project.title}

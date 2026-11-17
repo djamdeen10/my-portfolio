@@ -5,7 +5,7 @@ import { badgeClass, cardClass } from '../../components/ui/styles.js';
 function InterestCard({ item }) {
   return (
     <li>
-      <article className={cardClass}>
+      <article className={`${cardClass} h-full`}>
         <div className="flex items-start justify-between gap-2">
           <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50 flex-1 min-w-0">
             {item.title}
@@ -29,7 +29,7 @@ export default function Interests() {
             Centres d'intérêt &amp; soft skills.
           </h3>
         </FadeInText>
-        <ul className="space-y-2">
+        <ul className="grid gap-2 lg:grid-cols-2 2xl:grid-cols-4">
           {interests.map((item, index) => {
             const Reveal = index % 2 === 0 ? SlideInLeft : SlideInRight;
             return (
