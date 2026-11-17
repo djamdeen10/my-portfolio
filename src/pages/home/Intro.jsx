@@ -12,8 +12,16 @@ export default function Intro() {
             <span className="font-medium text-neutral-900 dark:text-neutral-100">
               Djamal ALIDOU M.
             </span>
-            , mais vous pouvez simplement m’appeler Djam Deen. Je suis originaire du Bénin et basé
-            à Cotonou.
+            , mais vous pouvez simplement m’appeler Djam Deen. Je suis originaire du{' '}
+            <a
+              href="https://fr.wikipedia.org/wiki/B%C3%A9nin"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-neutral-900 underline decoration-neutral-400 underline-offset-[3px] transition-colors hover:decoration-neutral-900 dark:text-neutral-100 dark:decoration-neutral-500 dark:hover:decoration-neutral-100"
+            >
+              Bénin
+            </a>{' '}
+            et basé à Cotonou.
           </p>
           <p>
             Spécialisé en développement backend, je m’assure que les apps, sites et APIs
