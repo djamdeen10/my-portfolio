@@ -72,15 +72,9 @@ export const currentWork = {
 export const interests = [
   {
     title: 'Musique',
-    badge: 'rap · pop · drill',
+    badge: 'Rap / Drill / Pop',
     description:
-      'Rap, pop et drill en boucle. La bande-son des nuits calmes, des sessions de code et des grosses idées.',
-  },
-  {
-    title: 'Team chats',
-    badge: 'cat person',
-    description:
-      "Les chats, évidemment. C'est le visage derrière les commits — et la meilleure compagnie pendant les builds.",
+      'Toujours un casque sur les oreilles. Le rap et la drill pour le rythme, et un peu de pop pour varier les plaisirs.',
   },
   {
     title: 'Football',
@@ -89,10 +83,34 @@ export const interests = [
       'Barcelonais de cœur. Un vrai attachement au jeu collectif, à la vision et à la culture de progression du club.',
   },
   {
-    title: 'Mindset',
-    badge: 'Dream big',
+    title: 'Chats',
+    badge: 'Cat Lover 🐾',
     description:
-      'Rêve grand. Travaille plus grand. Garder le process chill, mais viser beaucoup plus loin.',
+      "Amoureux absolu des chats. Ils font la loi à la maison, et on les aime comme ça.",
+  },
+  {
+    title: 'Mindset',
+    badge: 'Motivation',
+    description:
+      'Ma devise : « Rêve grand et travaille plus grand. » Toujours prêt à relever de nouveaux défis.',
+  },
+  {
+    title: 'Séries',
+    badge: 'Réflexion & Stratégie',
+    description:
+      "Grand fan de séries où il faut garder le cerveau allumé. J'adore les scénarios complexes, les stratégies bien huilées et les plans ultra ficelés. De Mentalist à Casa de Papel en passant par Scorpion et The Blacklist, j'aime quand ça élabore des plans de dingue, que ça résout des énigmes complexes et que ça te retourne le cerveau jusqu'à la dernière minute.",
+    links: [
+      { label: 'Mentalist', href: 'https://www.themoviedb.org/tv/5920-the-mentalist' },
+      { label: 'Casa de Papel', href: 'https://www.themoviedb.org/tv/71446-la-casa-de-papel' },
+      { label: 'Scorpion', href: 'https://www.themoviedb.org/tv/60797-scorpion' },
+      { label: 'The Blacklist', href: 'https://www.themoviedb.org/tv/46952-the-blacklist' },
+    ],
+  },
+  {
+    title: 'Soft Skill',
+    badge: "Travail d'équipe",
+    description:
+      "J'adore collaborer et avancer ensemble. Pour moi, les meilleures idées et les meilleurs projets se construisent en équipe.",
   },
 ];
 
