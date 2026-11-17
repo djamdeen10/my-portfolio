@@ -41,7 +41,7 @@ export function DesktopSidebar({ active = 'accueil', onNavigate }) {
 
       {/* The bio sits lower in its own framed block. Its extra height is pulled
           back with a negative bottom margin so the centred nav does not move. */}
-      <div className="mx-4 mt-4 -mb-3 rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 dark:border-white/[0.07] dark:bg-white/[0.03]">
+      <div className="bio-card mx-4 mt-4 -mb-3 rounded-xl px-3.5 py-2.5">
         <ul className="flex flex-col gap-1 text-[12px] leading-[18px] text-neutral-500 dark:text-neutral-400">
           {BIO.map(({ icon: Icon, label }) => (
             <li key={label} className="flex items-center gap-2">
