@@ -181,7 +181,7 @@ public/
   _headers                          # en-têtes Cloudflare Pages
 scripts/
   generate-seo.mjs                  # coquilles HTML, sitemap, robots, RSS, llms
-wrangler.toml                       # configuration Cloudflare Pages
+wrangler.jsonc                      # configuration Cloudflare Pages
 src/
   App.jsx                           # shell, routage et transitions de pages
   index.css                         # thème, grille de fond, polices, liquid glass, RTL
