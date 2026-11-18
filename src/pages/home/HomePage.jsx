@@ -4,6 +4,7 @@ import Skills from './Skills.jsx';
 import CurrentWork from './CurrentWork.jsx';
 import LatestPost from './LatestPost.jsx';
 import Interests from './Interests.jsx';
+import FaqSection from './FaqSection.jsx';
 
 export default function HomePage({ onNavigate }) {
   return (
@@ -19,6 +20,8 @@ export default function HomePage({ onNavigate }) {
       <LatestPost onNavigate={onNavigate} />
 
       <Interests />
+
+      <FaqSection />
     </>
   );
 }

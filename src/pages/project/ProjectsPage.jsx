@@ -1,25 +1,26 @@
-import { profile, projects } from '../../data/content.js';
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { FadeInText, SlideUp } from '../../components/ui/Animations.jsx';
 import { badgeClass } from '../../components/ui/styles.js';
 import ProjectCard from './ProjectCard.jsx';
 
 export default function ProjectsPage({ onNavigate }) {
+  const { content, t, tp } = useI18n();
+  const { profile, projects } = content;
+
   return (
     <SlideUp delay={0.2}>
       <section className="section-lines p-4">
         <FadeInText delay={0.1}>
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-                Projets.
-              </h2>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                Ce sur quoi je passe mes nuits.
+              <h1 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+                {t('projects.title')}
+              </h1>
+              <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
+                {t('projects.subtitle')}
               </p>
             </div>
-            <span className={badgeClass}>
-              {projects.length} projet{projects.length > 1 ? 's' : ''}
-            </span>
+            <span className={badgeClass}>{tp('projects.count', projects.length)}</span>
           </div>
         </FadeInText>
 
@@ -43,7 +44,7 @@ export default function ProjectsPage({ onNavigate }) {
               rel="noreferrer"
               className="glass-chip glass-interactive inline-flex items-center gap-1 rounded-sm px-3 py-1.5 text-sm text-neutral-700 dark:text-neutral-200"
             >
-              Voir tous les repos -&gt;
+              {t('projects.repos')} -&gt;
             </a>
           </div>
         </FadeInText>

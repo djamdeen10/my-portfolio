@@ -1,5 +1,6 @@
-import { projects } from '../../data/content.js';
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { FadeInText, SlideUp } from '../../components/ui/Animations.jsx';
+import { CoverArt } from '../../components/ui/CoverArt.jsx';
 import { ExternalLink, Github } from '../../components/ui/Icons.jsx';
 import { StackChip } from '../../components/ui/StackChip.jsx';
 
@@ -10,10 +11,15 @@ const secondaryActionClass =
   'glass-chip glass-interactive inline-flex h-8 items-center gap-1 whitespace-nowrap rounded-sm px-2 text-[11px] font-medium text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 sm:gap-1.5 sm:px-3 sm:text-xs dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
 
 const sectionLabelClass =
-  'mt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400';
+  'mt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400';
 
 export default function ProjectDetailPage({ slug, onNavigate }) {
+  const { content, localizedPath, t } = useI18n();
+  const { projects } = content;
   const project = projects.find((item) => item.slug === slug);
+  const relatedPost = project
+    ? content.blogPosts.find((post) => post.id === project.id)
+    : null;
 
   const goBack = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -23,11 +29,11 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
 
   const backLink = (
     <a
-      href="/projet"
+      href={localizedPath('/projet')}
       onClick={goBack}
-      className="inline-flex items-center gap-1 text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+      className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
     >
-      &lt;- Tous les projets
+      {t('project.back')}
     </a>
   );
 
@@ -37,11 +43,11 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
         <section className="section-lines p-4">
           <FadeInText delay={0.1}>{backLink}</FadeInText>
           <FadeInText delay={0.15}>
-            <h2 className="mt-4 text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-              Projet introuvable.
-            </h2>
-            <p className="mt-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-              Ce projet n'existe pas ou n'est plus en ligne.
+            <h1 className="mt-4 text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+              {t('project.notFound')}
+            </h1>
+            <p className="mt-1 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+              {t('project.notFoundText')}
             </p>
           </FadeInText>
         </section>
@@ -57,21 +63,19 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
         <div className="xl:mt-1 xl:grid xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] xl:items-start xl:gap-6">
           <div className="xl:min-w-0">
             <FadeInText delay={0.15}>
-              <h2 className="mt-3 text-lg font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
+              <h1 className="mt-3 text-lg font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
                 {project.title}
-              </h2>
+              </h1>
             </FadeInText>
 
             {project.cover ? (
               <FadeInText delay={0.2}>
                 <div className="mt-3 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900">
-                  <div className="relative aspect-[16/9] xl:max-h-[460px]">
-                    <img
-                      src={project.cover}
-                      alt={`Aperçu de ${project.title}`}
-                      loading="eager"
-                      decoding="async"
-                      className="h-full w-full object-cover"
+                  <div className="relative" style={{ aspectRatio: project.coverAspect ?? 16 / 9 }}>
+                    <CoverArt
+                      variant={project.cover}
+                      alt={t('project.preview', { title: project.title })}
+                      className="absolute inset-0 h-full w-full"
                     />
                     <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
                   </div>
@@ -90,7 +94,7 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
                     rel="noreferrer"
                     className={primaryActionClass}
                   >
-                    Voir le projet
+                    {t('project.view')}
                     <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : null}
@@ -101,13 +105,13 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
                     rel="noreferrer"
                     className={secondaryActionClass}
                   >
-                    Code source
+                    {t('project.source')}
                     <Github className="h-3.5 w-3.5" />
                   </a>
                 ) : null}
               </div>
 
-              <h3 className={sectionLabelClass}>À propos</h3>
+              <h3 className={sectionLabelClass}>{t('project.about')}</h3>
               <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
                 {project.description}
               </p>
@@ -115,7 +119,7 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
 
             {project.stack?.length ? (
               <FadeInText delay={0.3}>
-                <h3 className={sectionLabelClass}>Stack</h3>
+                <h3 className={sectionLabelClass}>{t('project.stack')}</h3>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {project.stack.map((label) => (
                     <StackChip key={label} label={label} />
@@ -123,8 +127,72 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
                 </div>
               </FadeInText>
             ) : null}
+
+            {project.highlights?.length ? (
+              <FadeInText delay={0.35}>
+                <h3 className={sectionLabelClass}>{t('project.bricks')}</h3>
+                <dl className="mt-2 grid gap-2 sm:grid-cols-2">
+                  {project.highlights.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-lg border border-neutral-200 bg-neutral-50/60 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900/60"
+                    >
+                      <dt className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-600 dark:text-neutral-400">
+                        {item.label}
+                      </dt>
+                      <dd className="mt-0.5 text-xs font-medium text-neutral-900 dark:text-neutral-100">
+                        {item.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </FadeInText>
+            ) : null}
           </div>
         </div>
+
+        {project.body?.length ? (
+          <FadeInText delay={0.35}>
+            <div className="mt-6 max-w-[72ch] border-t border-neutral-200 pt-5 dark:border-neutral-800">
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
+                {t('project.body')}
+              </h3>
+              {project.body.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="mt-3 text-sm leading-relaxed text-neutral-600 first:mt-2 dark:text-neutral-300"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </FadeInText>
+        ) : null}
+
+        <FadeInText delay={0.4}>
+          <div className="mt-6 flex max-w-[72ch] flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
+            {relatedPost ? (
+              <a
+                href={localizedPath(`/blog/${relatedPost.slug}`)}
+                className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
+              >
+                {t('routeTitles.blogDetail')} · {relatedPost.title} →
+              </a>
+            ) : null}
+            <a
+              href={localizedPath('/projet')}
+              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
+            >
+              {t('project.back')}
+            </a>
+            <a
+              href={localizedPath('/contact')}
+              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
+            >
+              {t('nav.contact')} →
+            </a>
+          </div>
+        </FadeInText>
       </section>
     </SlideUp>
   );

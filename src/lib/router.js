@@ -1,43 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ROUTES, normalizePath, routeFor } from './routes.js';
+import { splitLocalePath, withLocalePath } from './localePath.js';
 
-export const ROUTES = [
-  { id: 'accueil', path: '/', label: 'Accueil', title: 'Portfolio' },
-  { id: 'projet', path: '/projet', label: 'Projet', title: 'Projets' },
-  { id: 'contact', path: '/contact', label: 'Contact', title: 'Contact' },
-  { id: 'blog', path: '/blog', label: 'Blog', title: 'Blog' },
-];
-
-function normalize(pathname) {
-  const clean = pathname.replace(/\/+$/, '');
-  return clean === '' ? '/' : clean;
-}
-
-export function routeFor(pathname) {
-  const normalized = normalize(pathname);
-  const exact = ROUTES.find((route) => route.path === normalized);
-  if (exact) return exact;
-
-  // Project detail pages live under /projet/{slug} without a static entry.
-  const detail = normalized.match(/^\/projet\/([a-z0-9-]+)$/i);
-  if (detail) {
-    return {
-      id: 'projet-detail',
-      path: normalized,
-      slug: detail[1].toLowerCase(),
-      label: 'Projet',
-      title: 'Projet',
-    };
-  }
-
-  return ROUTES[0];
-}
+export { ROUTES, routeFor } from './routes.js';
 
 export function useAppRouter() {
-  const [route, setRoute] = useState(() => routeFor(window.location.pathname));
+  const [route, setRoute] = useState(() => routeFor(splitLocalePath(window.location.pathname).pathname));
 
   useEffect(() => {
     const onPopState = () => {
-      setRoute(routeFor(window.location.pathname));
+      setRoute(routeFor(splitLocalePath(window.location.pathname).pathname));
       window.scrollTo({ top: 0, behavior: 'auto' });
     };
     window.addEventListener('popstate', onPopState);
@@ -45,15 +17,23 @@ export function useAppRouter() {
   }, []);
 
   const navigate = useCallback((path) => {
-    const next = routeFor(path);
-    const samePage = normalize(window.location.pathname) === next.path;
+    // Callers always pass an unprefixed route ("/blog", "/projet/slug").
+    const { pathname: cleanPath, locale } = splitLocalePath(path);
+    const next = routeFor(cleanPath);
+    const current = splitLocalePath(window.location.pathname);
+    const samePage = normalizePath(current.pathname) === normalizePath(next.path);
+    const target = withLocalePath(next.path, locale ?? current.locale ?? 'en');
 
-    if (!samePage) {
-      window.history.pushState(null, '', next.path);
+    if (!samePage || target !== window.location.pathname) {
+      window.history.pushState(null, '', target);
     }
 
     setRoute(next);
-    window.scrollTo({ top: 0, behavior: samePage ? 'smooth' : 'auto' });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({
+      top: 0,
+      behavior: samePage && !reduceMotion ? 'smooth' : 'auto',
+    });
   }, []);
 
   return { route, navigate };

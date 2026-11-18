@@ -1,9 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Moon, Sun } from './Icons.jsx';
 import { useTheme } from '../ThemeProvider.jsx';
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
+
+function useReducedMotionPreference() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window === 'undefined'
+      ? false
+      : window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReduced(media.matches);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  return reduced;
+}
 
 export function TimeCounter({ className, timeZone, title }) {
+  const { language, t } = useI18n();
   const [time, setTime] = useState(() => new Date());
 
   useEffect(() => {
@@ -11,20 +29,27 @@ export function TimeCounter({ className, timeZone, title }) {
     return () => clearInterval(interval);
   }, []);
 
-  const formatted = useMemo(() => {
+  // One Intl formatter per locale/time zone instead of constructing a new one
+  // on every clock tick.
+  const formatter = useMemo(() => {
     const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
 
     try {
-      return time.toLocaleTimeString('en-US', timeZone ? { ...options, timeZone } : options);
+      return new Intl.DateTimeFormat(
+        language.locale,
+        timeZone ? { ...options, timeZone } : options,
+      );
     } catch {
-      return time.toLocaleTimeString('en-US', options);
+      return new Intl.DateTimeFormat(language.locale, options);
     }
-  }, [time, timeZone]);
+  }, [language.locale, timeZone]);
+
+  const formatted = formatter.format(time);
 
   return (
     <span
       className={className}
-      title={title ?? (timeZone ? `Heure locale · ${timeZone}` : 'Heure locale')}
+      title={title ?? (timeZone ? `${t('time.local')} · ${timeZone}` : t('time.local'))}
       suppressHydrationWarning
     >
       {formatted}
@@ -32,38 +57,28 @@ export function TimeCounter({ className, timeZone, title }) {
   );
 }
 
+/**
+ * Shimmer driven by CSS instead of a Framer Motion loop: one declaration,
+ * no requestAnimationFrame tick and no React state while the page is idle.
+ */
 export function TextShimmer({ children, as: Tag = 'p', className, duration = 1.5, spread = 4 }) {
-  const MotionTag = useMemo(() => motion.create(Tag), [Tag]);
-  const spreadPx = useMemo(() => children.length * spread, [children, spread]);
+  const spreadPx = useMemo(
+    () => (typeof children === 'string' ? children.length * spread : 0),
+    [children, spread],
+  );
 
   return (
-    <MotionTag
-      className={[
-        'relative inline-block bg-[length:250%_100%,auto] bg-clip-text',
-        'text-transparent [--base-color:#a1a1aa] [--base-gradient-color:#000000]',
-        '[--bg:linear-gradient(90deg,#0000_calc(50%-var(--spread)),var(--base-gradient-color),#0000_calc(50%+var(--spread)))] [background-repeat:no-repeat,padding-box]',
-        'dark:[--base-color:#71717a] dark:[--base-gradient-color:#ffffff] dark:[--bg:linear-gradient(90deg,#0000_calc(50%-var(--spread)),var(--base-gradient-color),#0000_calc(50%+var(--spread)))]',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      initial={{ backgroundPosition: '100% center' }}
-      animate={{ backgroundPosition: '0% center' }}
-      transition={{ repeat: Infinity, duration, ease: 'linear' }}
+    <Tag
+      className={['text-shimmer relative inline-block', className].filter(Boolean).join(' ')}
       style={{
-        '--spread': `${spreadPx}px`,
-        backgroundImage: 'var(--bg), linear-gradient(var(--base-color), var(--base-color))',
+        '--shimmer-spread': `${spreadPx}px`,
+        '--shimmer-duration': `${duration}s`,
       }}
     >
       {children}
-    </MotionTag>
+    </Tag>
   );
 }
-
-const cursorVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.01, repeat: Infinity, repeatDelay: 0.4, repeatType: 'reverse' } },
-};
 
 export function Typewriter({
   text,
@@ -76,17 +91,20 @@ export function Typewriter({
   showCursor = true,
   hideCursorOnType = false,
   cursorChar = '|',
-  cursorClassName = 'ml-1',
+  cursorClassName = 'ms-1',
 }) {
   const [displayText, setDisplayText] = useState('');
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [typeIndex, setTypeIndex] = useState(0);
+  const reducedMotion = useReducedMotionPreference();
 
   const phrases = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
   const currentText = phrases[typeIndex];
 
   useEffect(() => {
+    if (reducedMotion) return undefined;
+
     let timeout;
 
     const step = () => {
@@ -117,32 +135,46 @@ export function Typewriter({
     }
 
     return () => clearTimeout(timeout);
-  }, [charIndex, displayText, isDeleting, speed, deleteSpeed, waitTime, phrases, typeIndex, currentText, loop, initialDelay]);
+  }, [
+    charIndex,
+    displayText,
+    isDeleting,
+    speed,
+    deleteSpeed,
+    waitTime,
+    phrases,
+    typeIndex,
+    currentText,
+    loop,
+    initialDelay,
+    reducedMotion,
+  ]);
+
+  const visibleText = reducedMotion ? phrases[0] : displayText;
 
   return (
     <div className={`inline whitespace-pre-wrap tracking-tight ${className ?? ''}`}>
-      <span>{displayText}</span>
-      {showCursor && (
-        <motion.span
-          variants={cursorVariants}
-          className={`${cursorClassName}${hideCursorOnType && (charIndex < currentText.length || isDeleting) ? ' hidden' : ''}`}
-          initial="initial"
-          animate="animate"
+      <span>{visibleText}</span>
+      {showCursor && !reducedMotion && (
+        <span
+          className={`typewriter-cursor${cursorClassName}${hideCursorOnType && (charIndex < currentText.length || isDeleting) ? ' hidden' : ''}`}
+          aria-hidden="true"
         >
           {cursorChar}
-        </motion.span>
+        </span>
       )}
     </div>
   );
 }
 
 export function ThemeToggle() {
+  const { t } = useI18n();
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) return null;
+  if (!mounted) return <span aria-hidden="true" className="inline-block h-8 w-8" />;
 
   // Always toggle from the theme that is actually applied. Using the raw
   // preference here broke the first click when it was still "system".
@@ -151,14 +183,14 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      aria-label={isDark ? 'Activer le thème clair' : 'Activer le thème sombre'}
-      title={isDark ? 'Thème clair' : 'Thème sombre'}
+      aria-label={isDark ? t('theme.light') : t('theme.dark')}
+      title={isDark ? t('theme.light') : t('theme.dark')}
       aria-pressed={isDark}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="glass-chip glass-interactive backdrop-blur-md inline-flex h-8 w-8 items-center justify-center rounded-full text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50"
+      className="glass-chip glass-interactive inline-flex h-8 w-8 items-center justify-center rounded-full text-foreground transition-transform duration-150 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50"
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-      <span className="sr-only">{isDark ? 'Activer le thème clair' : 'Activer le thème sombre'}</span>
+      <span className="sr-only">{isDark ? t('theme.light') : t('theme.dark')}</span>
     </button>
   );
 }

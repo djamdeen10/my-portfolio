@@ -1,20 +1,21 @@
-import { currentWork, projects } from '../../data/content.js';
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { SlideUp } from '../../components/ui/Animations.jsx';
-import { Github } from '../../components/ui/Icons.jsx';
+import { CoverArt } from '../../components/ui/CoverArt.jsx';
+import { ExternalLink, Github } from '../../components/ui/Icons.jsx';
 import { StackChip } from '../../components/ui/StackChip.jsx';
 import { badgeClass } from '../../components/ui/styles.js';
 
-const primaryActionClass =
-  'glass-primary glass-interactive inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-4 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50';
-
-const secondaryActionClass =
-  'glass-chip glass-interactive inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-3 text-sm font-medium text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
+const iconActionClass =
+  'glass-chip glass-interactive inline-flex h-7 w-7 items-center justify-center rounded-sm text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
 
 export default function CurrentWork({ onNavigate }) {
-  const project = projects.find((item) => item.slug === currentWork.slug) ?? projects[0];
+  const { content, localizedPath, t } = useI18n();
+  const { currentWork, projects } = content;
+  const project = projects.find((item) => item.id === currentWork.projectId) ?? projects[0];
   if (!project) return null;
 
   const detailsHref = project.slug ? `/projet/${project.slug}` : '/projet';
+  const detailsLink = localizedPath(detailsHref);
 
   const openDetails = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -34,10 +35,10 @@ export default function CurrentWork({ onNavigate }) {
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-              En ce moment
+              {t('currentWork.title')}
             </h3>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-              Ce sur quoi je bosse actuellement.
+            <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
+              {t('currentWork.subtitle')}
             </p>
           </div>
           <span className={`${badgeClass} inline-flex items-center gap-1.5`}>
@@ -51,28 +52,54 @@ export default function CurrentWork({ onNavigate }) {
 
         <article className="group overflow-hidden rounded-xl border border-neutral-200 bg-white xl:flex dark:border-neutral-800 dark:bg-neutral-950">
           <a
-            href={detailsHref}
+            href={detailsLink}
             onClick={openDetails}
-            aria-label={`Voir ${project.title}`}
-            className="relative block aspect-[16/9] overflow-hidden bg-neutral-100 xl:aspect-auto xl:w-[46%] xl:shrink-0 dark:bg-neutral-900"
+            aria-label={t('currentWork.preview', { title: project.title })}
+            className="relative block aspect-[16/9] overflow-hidden bg-neutral-950 xl:aspect-auto xl:w-[46%] xl:shrink-0"
           >
-            <img
-              src={project.cover}
-              alt={`Aperçu de ${project.title}`}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            <CoverArt
+              variant={project.cover}
+              alt={t('currentWork.preview', { title: project.title })}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             />
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
           </a>
 
           <div className="flex flex-1 flex-col p-4 xl:justify-center xl:p-6">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
-              Projet actuel
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
+              {t('currentWork.label')}
             </p>
-            <h4 className="mt-1 text-base font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
-              {project.title}
-            </h4>
+            <div className="mt-1 flex items-start justify-between gap-3">
+              <h4 className="min-w-0 text-base font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
+                {project.title}
+              </h4>
+              <div className="flex shrink-0 items-center gap-1.5">
+                {project.demo ? (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={t('currentWork.viewOnline', { title: project.title })}
+                    title={t('currentWork.viewOnlineTitle')}
+                    className={iconActionClass}
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
+                {project.github ? (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={t('currentWork.viewCode', { title: project.title })}
+                    title={t('currentWork.viewCodeTitle')}
+                    className={iconActionClass}
+                  >
+                    <Github className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
+              </div>
+            </div>
             <p className="mt-2 text-xs leading-relaxed text-neutral-600 lg:text-[13px] dark:text-neutral-300">
               {project.description}
             </p>
@@ -85,32 +112,25 @@ export default function CurrentWork({ onNavigate }) {
               </div>
             ) : null}
 
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <a href={detailsHref} onClick={openDetails} className={primaryActionClass}>
-                Voir le projet
+            <div className="mt-4">
+              <a
+                href={detailsLink}
+                onClick={openDetails}
+                className="glass-primary glass-interactive inline-flex w-full items-center justify-center gap-1 rounded-sm px-3 py-1.5 text-sm font-medium"
+              >
+                {t('currentWork.details')} -&gt;
               </a>
-              {project.github ? (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={secondaryActionClass}
-                >
-                  Code source
-                  <Github className="h-3.5 w-3.5" />
-                </a>
-              ) : null}
             </div>
           </div>
         </article>
 
-        <div className="mt-4">
+        <div className="mt-4 flex justify-center">
           <a
-            href="/projet"
+            href={localizedPath('/projet')}
             onClick={goToProjects}
             className="glass-chip glass-interactive inline-flex w-full items-center justify-center gap-1 rounded-sm px-4 py-2 text-sm font-medium text-neutral-700 sm:w-auto dark:text-neutral-200"
           >
-            Voir tous mes projets -&gt;
+            {t('currentWork.all')} -&gt;
           </a>
         </div>
       </section>

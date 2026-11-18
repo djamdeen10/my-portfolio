@@ -1,4 +1,6 @@
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { SlideInLeft, SlideInRight } from '../../components/ui/Animations.jsx';
+import { CoverArt } from '../../components/ui/CoverArt.jsx';
 import { ExternalLink, Github } from '../../components/ui/Icons.jsx';
 import { StackChip } from '../../components/ui/StackChip.jsx';
 
@@ -6,8 +8,10 @@ const actionClass =
   'glass-chip glass-interactive inline-flex h-7 w-7 items-center justify-center rounded-sm text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:text-neutral-200 dark:focus-visible:ring-neutral-100/50';
 
 export default function ProjectCard({ project, direction = 'left', delay = 0.1, onNavigate }) {
+  const { localizedPath, t } = useI18n();
   const Reveal = direction === 'right' ? SlideInRight : SlideInLeft;
   const detailsHref = project.slug ? `/projet/${project.slug}` : '/projet';
+  const detailsLink = localizedPath(detailsHref);
 
   const openDetails = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -20,12 +24,10 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
       <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
         {project.cover ? (
           <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-            <img
-              src={project.cover}
-              alt={`Aperçu de ${project.title}`}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            <CoverArt
+              variant={project.cover}
+              alt={t('projects.preview', { title: project.title })}
+              className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             />
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
           </div>
@@ -42,8 +44,8 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
                   href={project.demo}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Voir ${project.title} en ligne`}
-                  title="Voir le projet en ligne"
+                  aria-label={t('projects.viewOnline', { title: project.title })}
+                  title={t('projects.viewOnlineTitle')}
                   className={actionClass}
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -54,8 +56,8 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
                   href={project.github}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Voir le code de ${project.title} sur GitHub`}
-                  title="Voir le code sur GitHub"
+                  aria-label={t('projects.viewCode', { title: project.title })}
+                  title={t('projects.viewCodeTitle')}
                   className={actionClass}
                 >
                   <Github className="h-3.5 w-3.5" />
@@ -78,11 +80,11 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
 
           <div className="mt-auto pt-4">
             <a
-              href={detailsHref}
+              href={detailsLink}
               onClick={openDetails}
               className="glass-primary glass-interactive inline-flex w-full items-center justify-center gap-1 rounded-sm px-3 py-1.5 text-sm font-medium"
             >
-              Plus de détails -&gt;
+              {t('projects.details')} -&gt;
             </a>
           </div>
         </div>

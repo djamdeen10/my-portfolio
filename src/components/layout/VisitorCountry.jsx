@@ -1,25 +1,28 @@
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { useVisitorGeo } from '../../lib/visitor.js';
 
-function countryLabel(countryCode, fallback) {
+function countryLabel(countryCode, fallback, locale) {
   try {
-    return new Intl.DisplayNames(['fr'], { type: 'region' }).of(countryCode) ?? fallback;
+    return new Intl.DisplayNames([locale], { type: 'region' }).of(countryCode) ?? fallback;
   } catch {
     return fallback;
   }
 }
 
 export function VisitorCountry() {
+  const { language, t } = useI18n();
   const { status, countryCode, countryName, cityName, regionName, timeZone } = useVisitorGeo();
 
   if (status !== 'ready' || !countryCode) return null;
 
   const code = countryCode.toLowerCase();
-  const place = [cityName ?? regionName, countryLabel(countryCode, countryName)].filter(Boolean).join(', ');
+  const country = countryLabel(countryCode, countryName, language.locale);
+  const place = [cityName ?? regionName, country].filter(Boolean).join(', ');
 
   return (
     <span
       title={place ? `${place} · ${timeZone}` : timeZone}
-      className="glass-chip inline-flex h-8 items-center gap-1.5 rounded-full px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-300"
+      className="glass-chip visitor-chip inline-flex h-8 items-center gap-1.5 rounded-full px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-300"
     >
       <img
         src={`https://flagcdn.com/w40/${code}.png`}
@@ -35,7 +38,7 @@ export function VisitorCountry() {
         className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-black/10 dark:ring-white/20"
       />
       <span aria-hidden="true">{countryCode}</span>
-      <span className="sr-only">Pays détecté : {countryLabel(countryCode, countryName) ?? countryCode}</span>
+      <span className="sr-only">{t('visitor.country', { country: country ?? countryCode })}</span>
     </span>
   );
 }

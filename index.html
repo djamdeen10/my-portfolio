@@ -1,25 +1,74 @@
 <!doctype html>
-<html lang="fr" class="antialiased">
+<html lang="en" class="antialiased">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Djam Deen — Backend Developer &amp; AI-Powered Builder</title>
+    <title>Djam Deen — Backend Developer &amp; AI-Assisted Product Builder</title>
     <meta
       name="description"
-      content="Portfolio de Djam Deen (djamdeen10), développeur backend et AI-powered builder. J'aime les outils utiles et cools, le code propre, les chats et les grosses idées."
+      content="Portfolio of Djam Deen (djamdeen10), backend developer who builds products with AI. Useful and cool tools, clean code, cats and big ideas."
     />
     <meta name="author" content="Djam Deen" />
     <meta
       name="keywords"
-      content="Djam Deen,djamdeen10,Portfolio,Developpeur Backend,Backend Developer,AI-Powered Builder,AgentMob,TypeScript,React,Hono,PostgreSQL,FastAPI,Node.js,Next.js,Python,Developpeur web,Application web,Site personnel"
+      content="Djam Deen,djamdeen10,Portfolio,Backend Developer,AI-Assisted Product Builder,AgentMob,TypeScript,React,Hono,PostgreSQL,FastAPI,Node.js,Next.js,Python,Web Developer,Web Application,Personal Website"
     />
     <meta name="theme-color" content="#fafafa" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Djam Deen — Backend Developer &amp; AI-Assisted Product Builder" />
+    <meta property="og:description" content="Portfolio of Djam Deen (djamdeen10), backend developer who builds products with AI. Useful and cool tools, clean code, cats and big ideas." />
+    <meta property="og:url" content="https://djamdeen.com/" />
+    <meta property="og:site_name" content="Djam Deen" />
+    <meta property="og:image" content="https://djamdeen.com/og/djam-deen.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Djam Deen — Backend Developer &amp; AI-Assisted Product Builder" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Djam Deen — Backend Developer &amp; AI-Assisted Product Builder" />
+    <meta name="twitter:description" content="Portfolio of Djam Deen (djamdeen10), backend developer who builds products with AI. Useful and cool tools, clean code, cats and big ideas." />
+    <meta name="twitter:image" content="https://djamdeen.com/og/djam-deen.png" />
+    <meta name="twitter:image:alt" content="Djam Deen — Backend Developer &amp; AI-Assisted Product Builder" />
+    <meta name="twitter:site" content="@djamdeen10" />
+    <meta name="twitter:creator" content="@djamdeen10" />
     <link rel="shortcut icon" href="/avatar.jpg" />
     <link rel="icon" href="/avatar.jpg" />
     <link rel="apple-touch-icon" href="/avatar.jpg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Djam Deen — Blog" href="/rss.xml" />
     <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://flagcdn.com" crossorigin />
     <script>
+      (function () {
+        try {
+          var locales = {
+            en: "en-US",
+            fr: "fr-FR",
+            es: "es-ES",
+            ar: "ar",
+            pt: "pt-PT",
+            zh: "zh-CN",
+            ja: "ja-JP",
+            ru: "ru-RU",
+          };
+          var code = null;
+          var first = window.location.pathname.split("/")[1] || "";
+          if (locales[first]) code = first;
+          else {
+            var queryCode = new URLSearchParams(window.location.search).get("lang");
+            if (locales[queryCode]) code = queryCode;
+            else if (!first) code = localStorage.getItem("djamdeen:language");
+          }
+          if (locales[code]) {
+            document.documentElement.lang = locales[code];
+            document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+            document.documentElement.dataset.language = code;
+          }
+        } catch (e) {}
+      })();
       (function () {
         try {
           var key = "app-theme";
@@ -34,11 +83,13 @@
           root.classList.remove("light", "dark");
           root.classList.add(resolved);
           root.style.colorScheme = resolved;
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) themeColor.setAttribute("content", resolved === "dark" ? "#0a0a0a" : "#fafafa");
         } catch (e) {}
       })();
     </script>
   </head>
-  <body class="font-sans min-h-dvh bg-grid text-foreground">
+  <body class="font-sans min-h-dvh text-foreground">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

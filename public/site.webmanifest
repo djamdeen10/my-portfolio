@@ -1,0 +1,26 @@
+{
+  "name": "Djam Deen — Backend Developer & AI-Assisted Product Builder",
+  "short_name": "Djam Deen",
+  "description": "Portfolio of Djam Deen (djamdeen10), a backend developer who builds products with AI, based in Cotonou, Benin.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "portfolio",
+    "developer",
+    "technology"
+  ],
+  "icons": [
+    {
+      "src": "/avatar.jpg",
+      "sizes": "498x485",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 // Same endpoint the documented https://freeipapi.com/api/json redirects to,
 // called directly to save a round trip on every first visit.
-const ENDPOINT = 'https://free.freeipapi.com/api/v1/json';
+// Set VITE_IP_API_URL to plug your own IP geolocation service. It must return
+// at least `{ countryCode: 'FR' }` (freeipapi's shape is supported as-is).
+const ENDPOINT =
+  import.meta.env.VITE_IP_API_URL || 'https://free.freeipapi.com/api/v1/json';
 const CACHE_KEY = 'djamdeen:visitor-geo:v1';
 const CACHE_TTL = 30 * 60 * 1000;
 const REQUEST_TIMEOUT = 6000;
@@ -82,13 +85,13 @@ function writeCache(data) {
   }
 }
 
-async function fetchVisitorGeo() {
+async function fetchVisitorGeo(timeout = REQUEST_TIMEOUT) {
   const cached = readCache();
   if (cached) return cached;
   if (inflight) return inflight;
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+  const timer = setTimeout(() => controller.abort(), timeout);
 
   inflight = (async () => {
     try {
@@ -108,6 +111,19 @@ async function fetchVisitorGeo() {
   })();
 
   return inflight;
+}
+
+/**
+ * Same promise used by the language boot: it reads the session cache first,
+ * then calls freeipapi. A custom timeout keeps the first paint short.
+ */
+export function getVisitorGeo({ timeout = REQUEST_TIMEOUT } = {}) {
+  return fetchVisitorGeo(timeout);
+}
+
+/** Synchronous cache read, used to pick the language before the first paint. */
+export function readCachedVisitorGeo() {
+  return readCache();
 }
 
 /**

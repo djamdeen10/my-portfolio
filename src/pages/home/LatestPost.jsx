@@ -1,34 +1,38 @@
-import { blogPosts } from '../../data/content.js';
+import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { SlideUp } from '../../components/ui/Animations.jsx';
+import { CoverArt } from '../../components/ui/CoverArt.jsx';
+import { Clock } from '../../components/ui/Icons.jsx';
 
-function dateParts(value) {
-  const date = new Date(value);
+function dateParts(value, locale) {
+  const date = new Date(`${value}T00:00:00`);
   if (Number.isNaN(date.getTime())) return null;
 
   return {
-    day: new Intl.DateTimeFormat('fr-FR', { day: '2-digit' }).format(date),
-    month: new Intl.DateTimeFormat('fr-FR', { month: 'short' })
-      .format(date)
-      .replace('.', ''),
-    year: new Intl.DateTimeFormat('fr-FR', { year: 'numeric' }).format(date),
+    day: new Intl.DateTimeFormat(locale, { day: '2-digit' }).format(date),
+    month: new Intl.DateTimeFormat(locale, { month: 'short' }).format(date).replace('.', ''),
+    year: new Intl.DateTimeFormat(locale, { year: 'numeric' }).format(date),
   };
 }
 
 export default function LatestPost({ onNavigate }) {
-  const latest = [...blogPosts].sort(
-    (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
-  )[0];
+  const { content, language, localizedPath, t } = useI18n();
+  const { blogPosts } = content;
+
+  const latest = blogPosts
+    .filter((post) => post.section !== 'notes')
+    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())[0];
   if (!latest) return null;
 
-  const href = latest.href && latest.href !== '#' ? latest.href : '/blog';
-  const external = /^https?:/i.test(href);
-  const date = dateParts(latest.date);
+  const rawHref = latest.href && latest.href !== '#' ? latest.href : `/blog/${latest.slug}`;
+  const external = /^https?:/i.test(rawHref);
+  const href = external ? rawHref : localizedPath(rawHref);
+  const date = dateParts(latest.date, language.locale);
 
   const openPost = (event) => {
     if (external) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    onNavigate?.(href);
+    onNavigate?.(rawHref);
   };
 
   const goToBlog = (event) => {
@@ -47,21 +51,21 @@ export default function LatestPost({ onNavigate }) {
         <div className="mb-4 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
           <div>
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-              Dernier article
+              {t('latestPost.title')}
             </h3>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-              Ce que j’écris quand je ne code pas.
+            <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
+              {t('latestPost.subtitle')}
             </p>
           </div>
           <a
-            href="/blog"
+            href={localizedPath('/blog')}
             onClick={goToBlog}
-            className="group/all inline-flex shrink-0 items-center gap-1.5 py-1 text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+            className="group/all inline-flex shrink-0 items-center gap-1.5 py-1 text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
           >
-            Tous les articles
+            {t('latestPost.all')}
             <span
               aria-hidden="true"
-              className="transition-transform duration-200 group-hover/all:translate-x-0.5"
+              className="transition-transform duration-200 group-hover/all:translate-x-0.5 rtl:group-hover/all:-translate-x-0.5"
             >
               →
             </span>
@@ -70,23 +74,43 @@ export default function LatestPost({ onNavigate }) {
 
         <div className="grid grid-cols-1 gap-4 border-t border-neutral-200 pt-4 xl:grid-cols-[88px_minmax(0,1fr)_320px] xl:items-center xl:gap-6 2xl:grid-cols-[96px_minmax(0,1fr)_360px] dark:border-neutral-800">
           {date ? (
-            <div className="order-2 flex items-baseline gap-2 xl:order-none xl:block">
-              <span className="text-2xl font-semibold tracking-tight text-neutral-900 xl:text-4xl dark:text-neutral-50">
-                {date.day}
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 xl:mt-1 xl:block dark:text-neutral-400">
-                {date.month}{' '}
-                <span className="text-neutral-400 dark:text-neutral-500">{date.year}</span>
+            <div className="order-2 flex items-center justify-between gap-3 xl:order-none xl:block">
+              <p className="flex items-baseline gap-2 xl:block">
+                <span className="text-2xl font-semibold tracking-tight text-neutral-900 xl:text-4xl dark:text-neutral-50">
+                  {date.day}
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 xl:mt-1 xl:block dark:text-neutral-400">
+                  {date.month}{' '}
+                  <span className="text-neutral-500">{date.year}</span>
+                </span>
+              </p>
+              <span
+                className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 xl:hidden dark:text-neutral-400"
+                title={t('latestPost.readingTime')}
+              >
+                <Clock className="h-3 w-3" />
+                {latest.readTime}
               </span>
             </div>
           ) : null}
 
           <div className="order-3 xl:order-none">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
-              {latest.theme}
-              <span className="px-1.5 text-neutral-300 dark:text-neutral-600">·</span>
-              {latest.readTime} de lecture
-            </p>
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
+              <span>{latest.theme}</span>
+              <span
+                className="hidden text-neutral-400 xl:inline dark:text-neutral-600"
+                aria-hidden="true"
+              >
+                ·
+              </span>
+              <span
+                className="hidden items-center gap-1 xl:inline-flex"
+                title={t('latestPost.readingTime')}
+              >
+                <Clock className="h-3 w-3" />
+                {latest.readTime}
+              </span>
+            </div>
 
             <a
               {...linkProps}
@@ -105,10 +129,10 @@ export default function LatestPost({ onNavigate }) {
               {...linkProps}
               className="group/link mt-3 inline-flex items-center gap-1.5 py-1 text-xs font-semibold text-neutral-900 dark:text-neutral-100"
             >
-              Lire l’article
+              {t('latestPost.read')}
               <span
                 aria-hidden="true"
-                className="transition-transform duration-200 group-hover/link:translate-x-0.5"
+                className="transition-transform duration-200 group-hover/link:translate-x-0.5 rtl:group-hover/link:-translate-x-0.5"
               >
                 →
               </span>
@@ -117,15 +141,14 @@ export default function LatestPost({ onNavigate }) {
 
           <a
             {...linkProps}
-            aria-label={`Lire ${latest.title}`}
-            className="group/img relative order-1 block aspect-[16/9] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 xl:order-none xl:aspect-[16/10] dark:border-neutral-800 dark:bg-neutral-900"
+            aria-label={t('latestPost.readAria', { title: latest.title })}
+            className="group/img relative order-1 block overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 xl:order-none dark:border-neutral-800 dark:bg-neutral-900"
+            style={{ aspectRatio: latest.coverAspect ?? 16 / 9 }}
           >
-            <img
-              src={latest.cover}
-              alt={`Aperçu de ${latest.title}`}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/img:scale-[1.02]"
+            <CoverArt
+              variant={latest.cover}
+              alt={t('latestPost.preview', { title: latest.title })}
+              className="absolute inset-0 h-full w-full transition-transform duration-500 ease-out group-hover/img:scale-[1.02]"
             />
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
           </a>
