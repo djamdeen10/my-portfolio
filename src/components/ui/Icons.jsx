@@ -167,6 +167,15 @@ export function ChevronDown({ className, ...props }) {
   );
 }
 
+export function ArrowRight({ className, ...props }) {
+  return (
+    <svg {...strokeProps} className={className} aria-hidden="true" {...props}>
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
+
 export function Check({ className, ...props }) {
   return (
     <svg {...strokeProps} className={className} aria-hidden="true" {...props}>

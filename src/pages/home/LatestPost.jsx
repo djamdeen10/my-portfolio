@@ -50,9 +50,9 @@ export default function LatestPost({ onNavigate }) {
       <section className="mt-8 section-lines p-4 lg:p-5">
         <div className="mb-4 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
           <div>
-            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
               {t('latestPost.title')}
-            </h3>
+            </h2>
             <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
               {t('latestPost.subtitle')}
             </p>
@@ -116,9 +116,9 @@ export default function LatestPost({ onNavigate }) {
               {...linkProps}
               className="group mt-1.5 block focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 dark:focus-visible:ring-neutral-100/50"
             >
-              <h4 className="text-lg font-semibold tracking-tight text-neutral-900 underline-offset-4 group-hover:underline xl:text-2xl dark:text-neutral-50">
+              <h3 className="text-lg font-semibold tracking-tight text-neutral-900 underline-offset-4 group-hover:underline xl:text-2xl dark:text-neutral-50">
                 {latest.title}
-              </h4>
+              </h3>
             </a>
 
             <p className="mt-2 max-w-[60ch] text-xs leading-relaxed text-neutral-600 lg:text-[13px] dark:text-neutral-300">

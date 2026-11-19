@@ -42,10 +42,13 @@ export default function Hero({ onNavigate }) {
                 <div className="glass-chip shrink-0 rounded-full p-1">
                   <div className="h-[72px] w-[72px] overflow-hidden rounded-full lg:h-[80px] lg:w-[80px]">
                     <img
-                      src="/avatar.jpg"
+                      src="/avatar-400.jpg"
+                      srcSet="/avatar-160.jpg 160w, /avatar-400.jpg 400w, /avatar.jpg 498w"
+                      sizes="(min-width: 1024px) 80px, 72px"
                       alt={profile.avatarAlt}
                       width="80"
                       height="80"
+                      fetchPriority="high"
                       decoding="async"
                       className="h-full w-full scale-105 object-cover"
                     />

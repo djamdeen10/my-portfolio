@@ -353,9 +353,9 @@ function organizationNode({ profile }) {
     url: absoluteUrl('/'),
     logo: {
       '@type': 'ImageObject',
-      url: absoluteUrl('/avatar.jpg'),
-      width: 498,
-      height: 485,
+      url: absoluteUrl('/icon-512.jpg'),
+      width: 512,
+      height: 512,
     },
     founder: { '@id': `${SITE_URL}/#person` },
     sameAs: SOCIAL_URLS,
@@ -547,7 +547,7 @@ export function buildPageSeo({
   const article = isPost ? blogPostingNode({ post, locale, canonical, image, keywords }) : null;
 
   let pageType = 'WebPage';
-  if (route.id === 'accueil') pageType = faqs ? ['ProfilePage', 'FAQPage'] : 'ProfilePage';
+  if (route.id === 'accueil') pageType = 'ProfilePage';
   else if (route.id === 'projet' || route.id === 'blog') pageType = 'CollectionPage';
   else if (route.id === 'contact') pageType = 'ContactPage';
   else if (isProject) pageType = 'ItemPage';
@@ -574,35 +574,50 @@ export function buildPageSeo({
       ? { '@id': `${canonical}#app` }
       : isPost
         ? { '@id': `${canonical}#article` }
-        : route.id === 'accueil' && faqs
-          ? faqs
-          : route.id === 'blog'
-            ? { '@id': `${absoluteUrl(withLocalePath('/blog', locale))}#blog` }
-            : route.id === 'projet'
+        : route.id === 'blog'
+          ? { '@id': `${absoluteUrl(withLocalePath('/blog', locale))}#blog` }
+          : route.id === 'projet'
+            ? {
+                '@type': 'ItemList',
+                itemListElement: content.projects.map((item, index) => ({
+                  '@type': 'ListItem',
+                  position: index + 1,
+                  url: absoluteUrl(withLocalePath(`/projet/${item.slug}`, locale)),
+                  name: item.title,
+                })),
+              }
+            : route.id === 'contact'
               ? {
-                  '@type': 'ItemList',
-                  itemListElement: content.projects.map((item, index) => ({
-                    '@type': 'ListItem',
-                    position: index + 1,
-                    url: absoluteUrl(withLocalePath(`/projet/${item.slug}`, locale)),
-                    name: item.title,
-                  })),
+                  '@type': 'ContactPoint',
+                  contactType: 'professional',
+                  email: SITE_EMAIL,
+                  availableLanguage: LANGUAGES.map((item) => item.locale),
                 }
-              : route.id === 'contact'
-                ? {
-                    '@type': 'ContactPoint',
-                    contactType: 'professional',
-                    email: SITE_EMAIL,
-                    availableLanguage: LANGUAGES.map((item) => item.locale),
-                  }
-                : { '@id': `${SITE_URL}/#person` },
+              : { '@id': `${SITE_URL}/#person` },
   };
+
+  // FAQPage must be a separate node: Google validates `mainEntity` against the
+  // page type. A ProfilePage expects a Person; a FAQPage expects Questions.
+  const faqPage = faqs
+    ? {
+        '@type': 'FAQPage',
+        '@id': `${canonical}#faq`,
+        url: canonical,
+        name: content.faq.title,
+        description: content.faq.subtitle,
+        inLanguage: language.locale,
+        isPartOf: { '@id': `${canonical}#webpage` },
+        about: { '@id': `${SITE_URL}/#person` },
+        mainEntity: faqs,
+      }
+    : null;
 
   const graph = prune([
     person,
     organization,
     website,
     webPage,
+    faqPage,
     breadcrumb,
     blog,
     app,

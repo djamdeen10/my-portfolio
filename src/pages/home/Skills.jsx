@@ -10,9 +10,9 @@ export default function Skills() {
     <SlideUp delay={0.3}>
       <section className="mt-5 section-lines p-4">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+          <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
             {t('skills.title')}
-          </h3>
+          </h2>
           <div className="pointer-events-none hidden text-[10px] text-neutral-600 dark:text-neutral-400 sm:block">
             {t('skills.hint')}
           </div>

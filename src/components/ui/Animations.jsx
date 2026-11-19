@@ -24,21 +24,25 @@ export function Reveal({
   direction = 'up',
   distance = 24,
   exit,
+  as = 'div',
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-20px' });
   const reduceMotion = useReducedMotion();
 
+  const StaticTag = as;
+  const MotionTag = m[as] ?? m.div;
+
   if (reduceMotion) {
     return (
-      <div ref={ref} className={className}>
+      <StaticTag ref={ref} className={className}>
         {children}
-      </div>
+      </StaticTag>
     );
   }
 
   return (
-    <m.div
+    <MotionTag
       ref={ref}
       className={className}
       initial="hidden"
@@ -55,7 +59,7 @@ export function Reveal({
       }}
     >
       {children}
-    </m.div>
+    </MotionTag>
   );
 }
 

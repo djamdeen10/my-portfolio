@@ -93,17 +93,49 @@ export function Typewriter({
   cursorChar = '|',
   cursorClassName = 'ms-1',
 }) {
-  const [displayText, setDisplayText] = useState('');
-  const [charIndex, setCharIndex] = useState(0);
+  const initialPhrase = Array.isArray(text) ? (text[0] ?? '') : (text ?? '');
+  const [displayText, setDisplayText] = useState(initialPhrase);
+  const [charIndex, setCharIndex] = useState(initialPhrase.length);
   const [isDeleting, setIsDeleting] = useState(false);
   const [typeIndex, setTypeIndex] = useState(0);
+  const [started, setStarted] = useState(false);
   const reducedMotion = useReducedMotionPreference();
 
   const phrases = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
   const currentText = phrases[typeIndex];
 
+  // Keep the full first role visible during the critical load. Starting the
+  // per-character ticks immediately made a stream of tiny React renders that
+  // competed with hydration and LCP on mobile. The animation now begins on
+  // the first real interaction, or after a short idle fallback.
   useEffect(() => {
     if (reducedMotion) return undefined;
+
+    const start = () => setStarted(true);
+    const fallback = window.setTimeout(start, 7000);
+    const events = ['pointerdown', 'keydown'];
+    for (const event of events) {
+      window.addEventListener(event, start, { once: true, passive: true });
+    }
+
+    return () => {
+      window.clearTimeout(fallback);
+      for (const event of events) window.removeEventListener(event, start);
+    };
+  }, [reducedMotion]);
+
+  // A language change supplies new role strings. Reset to the complete first
+  // phrase so no half-typed text from the previous locale flashes.
+  useEffect(() => {
+    const first = phrases[0] ?? '';
+    setDisplayText(first);
+    setCharIndex(first.length);
+    setIsDeleting(false);
+    setTypeIndex(0);
+  }, [phrases]);
+
+  useEffect(() => {
+    if (reducedMotion || !started) return undefined;
 
     let timeout;
 
@@ -148,14 +180,15 @@ export function Typewriter({
     loop,
     initialDelay,
     reducedMotion,
+    started,
   ]);
 
-  const visibleText = reducedMotion ? phrases[0] : displayText;
+  const visibleText = reducedMotion || !started ? phrases[0] : displayText;
 
   return (
     <div className={`inline whitespace-pre-wrap tracking-tight ${className ?? ''}`}>
       <span>{visibleText}</span>
-      {showCursor && !reducedMotion && (
+      {showCursor && !reducedMotion && started && (
         <span
           className={`typewriter-cursor${cursorClassName}${hideCursorOnType && (charIndex < currentText.length || isDeleting) ? ' hidden' : ''}`}
           aria-hidden="true"

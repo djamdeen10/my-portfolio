@@ -25,7 +25,6 @@ export default {
     theme: { light: '切换到浅色主题', dark: '切换到深色主题' },
     sidebar: {
       nav: '主导航',
-      bio: ['后端开发者', '用 AI 打造产品的人', '巴萨球迷', '猫奴'],
     },
     hero: {
       intro: '你好，我是',

@@ -8,13 +8,14 @@ import { BASE_TRANSLATIONS } from '../i18n/translations/index.js';
 
 export const identity = {
   name: 'Djam Deen',
+  wordmark: 'djamdeen',
   handle: 'djamdeen10',
   // The clock on the home page always shows the owner's time, not the visitor's.
   timeZone: 'Africa/Porto-Novo',
   email: 'djamdeen10@gmail.com',
   links: {
     twitter: 'https://x.com/djamdeen10',
-    facebook: 'https://www.facebook.com/djamdeen10',
+    facebook: 'https://www.facebook.com/profile.php?id=61596138017027',
     github: 'https://github.com/djamdeen10',
     repos: 'https://github.com/djamdeen10?tab=repositories',
   },

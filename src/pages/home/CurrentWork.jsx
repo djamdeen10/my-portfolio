@@ -34,9 +34,9 @@ export default function CurrentWork({ onNavigate }) {
       <section className="mt-8 section-lines p-4 lg:p-5">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
               {t('currentWork.title')}
-            </h3>
+            </h2>
             <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
               {t('currentWork.subtitle')}
             </p>
@@ -70,9 +70,9 @@ export default function CurrentWork({ onNavigate }) {
               {t('currentWork.label')}
             </p>
             <div className="mt-1 flex items-start justify-between gap-3">
-              <h4 className="min-w-0 text-base font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
+              <h3 className="min-w-0 text-base font-semibold tracking-tight text-neutral-900 xl:text-xl dark:text-neutral-50">
                 {project.title}
-              </h4>
+              </h3>
               <div className="flex shrink-0 items-center gap-1.5">
                 {project.demo ? (
                   <a

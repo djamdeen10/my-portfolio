@@ -27,8 +27,8 @@ import {
 } from './translations/index.js';
 
 const STORAGE_KEY = 'djamdeen:language';
-// Keep the branded boot short: after 1.5 s, fall back to the browser language
-// instead of holding the first paint hostage to a slow IP lookup.
+// The country lookup is a background enhancement, never a render gate. After
+// 1.5 s we simply keep the browser language and stop waiting for it.
 const DETECTION_TIMEOUT = 1500;
 
 const I18nContext = createContext(null);
@@ -103,8 +103,11 @@ function resolveInitialState() {
   const fromCache = languageForCountry(cached?.countryCode);
   if (fromCache) return { status: 'ready', locale: fromCache, source: 'geo-cache' };
 
+  // Paint immediately with the browser language. The country lookup runs in
+  // the background and only switches the locale if it actually differs, so a
+  // slow third-party request can never hold the first render hostage.
   return {
-    status: 'detecting',
+    status: 'ready',
     locale: browserLanguage() ?? DEFAULT_LANGUAGE,
     source: 'browser',
   };
@@ -169,36 +172,48 @@ export function LanguageProvider({ children }) {
     if (state.source === 'url') persistLanguage(state.locale);
   }, [state.source, state.locale]);
 
-  // First visit without a stored choice: ask the IP geolocation for a country,
-  // then map that country to one of the eight languages. The browser language
-  // is the fallback when the request fails or the country is not mapped.
-  // Load its chunk in parallel so the boot screen can disappear immediately
-  // when the lookup resolves.
+  // First visit without a stored choice: ask the IP geolocation for a country
+  // in the background, then map that country to one of the eight languages.
+  // The page is already painted in the browser language, so this is a soft
+  // upgrade rather than a blocking boot step. A manual choice cancels it.
   useEffect(() => {
-    if (state.status !== 'detecting') return undefined;
-    loadTranslation(language.code);
+    if (state.status !== 'ready' || state.source !== 'browser') return undefined;
 
     let active = true;
 
-    const finish = (locale, source) => {
+    const finish = (detected) => {
       if (!active) return;
-      setState({ status: 'ready', locale, source });
+
+      if (!detected || detected === state.locale) {
+        setState({ status: 'ready', locale: state.locale, source: 'geo' });
+        return;
+      }
+
+      const loaded = translations[detected] ?? getLoadedTranslation(detected);
+      const commit = (value) => {
+        if (!active || !value) return;
+        runStateTransition(() => {
+          setTranslations((current) =>
+            current[detected] ? current : { ...current, [detected]: value },
+          );
+          setState({ status: 'ready', locale: detected, source: 'geo' });
+        });
+      };
+
+      if (loaded) commit(loaded);
+      else loadTranslation(detected).then(commit).catch(() => {
+        if (active) setState({ status: 'ready', locale: state.locale, source: 'geo' });
+      });
     };
 
     getVisitorGeo({ timeout: DETECTION_TIMEOUT })
-      .then((geo) => {
-        const detected = languageForCountry(geo?.countryCode);
-        if (detected) finish(detected, 'geo');
-        else finish(browserLanguage() ?? DEFAULT_LANGUAGE, 'browser');
-      })
-      .catch(() => {
-        finish(browserLanguage() ?? DEFAULT_LANGUAGE, 'browser');
-      });
+      .then((geo) => finish(languageForCountry(geo?.countryCode)))
+      .catch(() => finish(null));
 
     return () => {
       active = false;
     };
-  }, [state.status, language.code]);
+  }, [state.status, state.source, state.locale, translations]);
 
   // The active locale needs its chunk before the interface can be painted.
   useEffect(() => {
@@ -215,8 +230,9 @@ export function LanguageProvider({ children }) {
     };
   }, [state.status, language.code, translation]);
 
-  // Warm the other locales once the page is idle. This keeps the first load
-  // light while making a language switch effectively instant afterwards.
+  // Warm the other locales after the page has settled. Starting this during
+  // the LCP window made every locale chunk compete with the text that was
+  // still painting, so keep a deliberate delay before the idle work.
   useEffect(() => {
     if (!ready) return undefined;
 
@@ -234,16 +250,22 @@ export function LanguageProvider({ children }) {
     };
 
     let idleHandle;
-    if (typeof window.requestIdleCallback === 'function') {
-      idleHandle = window.requestIdleCallback(prefetch, { timeout: 2500 });
-    } else {
-      idleHandle = window.setTimeout(prefetch, 1800);
-    }
+    const timer = window.setTimeout(() => {
+      if (cancelled) return;
+      if (typeof window.requestIdleCallback === 'function') {
+        idleHandle = window.requestIdleCallback(prefetch, { timeout: 1500 });
+      } else {
+        prefetch();
+      }
+    }, 8000);
 
     return () => {
       cancelled = true;
-      if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idleHandle);
-      else window.clearTimeout(idleHandle);
+      window.clearTimeout(timer);
+      if (idleHandle !== undefined) {
+        if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idleHandle);
+        else window.clearTimeout(idleHandle);
+      }
     };
   }, [ready, language.code]);
 
@@ -289,7 +311,9 @@ export function LanguageProvider({ children }) {
   // follows an old `?lang=fr` link, or whose preference is stored while on the
   // root, gets one canonical, crawlable URL (`/fr`, `/fr/blog`).
   useLayoutEffect(() => {
-    if (state.status !== 'ready') return;
+    // Wait for the background country lookup before rewriting the URL: a
+    // browser-language guess must not create a locale prefix we then undo.
+    if (state.status !== 'ready' || state.source === 'browser') return;
     const { pathname } = splitLocalePath(window.location.pathname);
     if (withLocalePath(pathname, state.locale) !== window.location.pathname) {
       syncUrlLanguage(state.locale);

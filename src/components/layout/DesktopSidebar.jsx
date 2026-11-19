@@ -1,7 +1,7 @@
 import { ROUTES } from '../../lib/router.js';
 import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { ThemeToggle } from '../ui/Effects.jsx';
-import { Cat, Code, Football, House, LayoutGrid, Mail, NotebookPen, Sparkles } from '../ui/Icons.jsx';
+import { House, LayoutGrid, Mail, NotebookPen } from '../ui/Icons.jsx';
 import { LanguageSelector } from './LanguageSelector.jsx';
 import { VisitorCountry } from './VisitorCountry.jsx';
 
@@ -12,15 +12,12 @@ const TAB_ICONS = {
   blog: NotebookPen,
 };
 
-const BIO_ICONS = [Code, Sparkles, Football, Cat];
-
 /**
- * Desktop-only left panel: logo and short bio on top, navigation in the
- * middle, visitor country and theme switch at the bottom. Hidden below `lg`.
+ * Desktop-only left panel: logo on top, navigation centred in the available
+ * space, visitor country and theme switch at the bottom. Hidden below `lg`.
  */
 export function DesktopSidebar({ active = 'accueil', onNavigate }) {
-  const { localizedPath, t } = useI18n();
-  const bio = t('sidebar.bio');
+  const { content, localizedPath, t } = useI18n();
   const activeIndex = Math.max(0, ROUTES.findIndex((route) => route.id === active));
 
   const handleClick = (event, path) => {
@@ -37,25 +34,9 @@ export function DesktopSidebar({ active = 'accueil', onNavigate }) {
           onClick={(event) => handleClick(event, '/')}
           className="min-w-0 truncate text-start text-[18px] font-semibold tracking-tight text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/40 xl:text-[20px] dark:text-neutral-50 dark:focus-visible:ring-neutral-100/50"
         >
-          djamdeen
+          {content.profile.wordmark}
         </a>
         <LanguageSelector />
-      </div>
-
-      {/* The bio sits lower in its own framed block. Its extra height is pulled
-          back with a negative bottom margin so the centred nav does not move. */}
-      <div className="bio-card mx-4 mt-4 -mb-3 rounded-xl px-3.5 py-2.5">
-        <ul className="flex flex-col gap-1 text-[12px] leading-[18px] text-neutral-600 dark:text-neutral-400">
-          {(Array.isArray(bio) ? bio : []).map((label, index) => {
-            const Icon = BIO_ICONS[index] ?? Code;
-            return (
-              <li key={label} className="flex items-center gap-2">
-                <Icon className="h-3.5 w-3.5 shrink-0 text-neutral-600" />
-                <span className="whitespace-nowrap">{label}</span>
-              </li>
-            );
-          })}
-        </ul>
       </div>
 
       <nav

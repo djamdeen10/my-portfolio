@@ -23,7 +23,7 @@ export const SITE_LOCATION = {
 export const SOCIAL_URLS = [
   'https://github.com/djamdeen10',
   'https://x.com/djamdeen10',
-  'https://www.facebook.com/djamdeen10',
+  'https://www.facebook.com/profile.php?id=61596138017027',
 ];
 
 export const DEFAULT_OG_IMAGE = {

@@ -35,9 +35,9 @@ export default function ProjectCard({ project, direction = 'left', delay = 0.1, 
 
         <div className="flex flex-1 flex-col p-4">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="min-w-0 truncate text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+            <h2 className="min-w-0 truncate text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
               {project.title}
-            </h3>
+            </h2>
             <div className="flex shrink-0 items-center gap-1.5">
               {project.demo ? (
                 <a

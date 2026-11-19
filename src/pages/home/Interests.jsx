@@ -39,19 +39,17 @@ function Description({ item, tmdbLabel }) {
 
 function InterestCard({ item, tmdbLabel }) {
   return (
-    <li className="h-full">
-      <article className={`${cardClass} flex h-full flex-col justify-center gap-3 md:px-5 md:py-4`}>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <h4 className="text-sm font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
-            {item.title}
-          </h4>
-          <span className={`${badgeClass} shrink-0`}>{item.badge}</span>
-        </div>
-        <p className="text-start text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300">
-          <Description item={item} tmdbLabel={tmdbLabel} />
-        </p>
-      </article>
-    </li>
+    <article className={`${cardClass} flex h-full flex-col justify-center gap-3 md:px-5 md:py-4`}>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <h3 className="text-sm font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+          {item.title}
+        </h3>
+        <span className={`${badgeClass} shrink-0`}>{item.badge}</span>
+      </div>
+      <p className="text-start text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300">
+        <Description item={item} tmdbLabel={tmdbLabel} />
+      </p>
+    </article>
   );
 }
 
@@ -65,15 +63,15 @@ export default function Interests() {
     <SlideUp delay={0.3}>
       <section className="mt-8 section-lines p-4">
         <FadeInText delay={0.1}>
-          <h3 className="mb-4 text-sm font-semibold text-neutral-900 dark:text-neutral-50">
+          <h2 className="mb-4 text-sm font-semibold text-neutral-900 dark:text-neutral-50">
             {t('interests.title')}
-          </h3>
+          </h2>
         </FadeInText>
         <ul className="interests-mosaic grid gap-2">
           {interests.map((item, index) => {
             const Reveal = index % 2 === 0 ? SlideInLeft : SlideInRight;
             return (
-              <Reveal key={item.title} delay={0.1} className="h-full">
+              <Reveal as="li" key={item.title} delay={0.1} className="h-full">
                 <InterestCard item={item} tmdbLabel={tmdbLabel} />
               </Reveal>
             );

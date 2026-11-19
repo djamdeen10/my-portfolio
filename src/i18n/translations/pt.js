@@ -25,7 +25,6 @@ export default {
     theme: { light: 'Ativar o tema claro', dark: 'Ativar o tema escuro' },
     sidebar: {
       nav: 'Navegação principal',
-      bio: ['Dev backend', 'Criador de produtos com IA', 'Adepto do FC Barcelona', 'Amante de gatos'],
     },
     hero: {
       intro: 'olá, sou',

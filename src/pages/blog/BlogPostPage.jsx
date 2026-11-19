@@ -1,6 +1,7 @@
 import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { FadeInText, SlideUp } from '../../components/ui/Animations.jsx';
 import { CoverArt } from '../../components/ui/CoverArt.jsx';
+import { PageLinks } from '../../components/ui/PageLinks.jsx';
 import { Clock } from '../../components/ui/Icons.jsx';
 
 // Rendu très léger : paragraphes, titres (##) et gras (**texte**).
@@ -143,7 +144,9 @@ export default function BlogPostPage({ slug, onNavigate }) {
         <FadeInText delay={0.3}>
           <div className="mt-8 flex max-w-[68ch] items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50/60 p-4 dark:border-neutral-800 dark:bg-neutral-900/50">
             <img
-              src="/avatar.jpg"
+              src="/avatar-160.jpg"
+              srcSet="/avatar-160.jpg 160w, /avatar-400.jpg 400w"
+              sizes="40px"
               alt={profile.avatarAlt}
               width="40"
               height="40"
@@ -165,27 +168,21 @@ export default function BlogPostPage({ slug, onNavigate }) {
             </div>
           </div>
 
-          <div className="mt-4 flex max-w-[68ch] flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
-            <a
-              href={localizedPath('/projet')}
-              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-            >
-              {t('nav.projet')}
-              {relatedProject ? ` · ${relatedProject.title}` : ''} →
-            </a>
-            <a
-              href={localizedPath('/blog')}
-              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-            >
-              {t('blog.back')}
-            </a>
-            <a
-              href={localizedPath('/contact')}
-              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-            >
-              {t('nav.contact')} →
-            </a>
-          </div>
+          <PageLinks
+            related={
+              relatedProject
+                ? {
+                    kind: 'project',
+                    eyebrow: t('routeTitles.projetDetail'),
+                    title: relatedProject.title,
+                  }
+                : null
+            }
+            relatedPath={relatedProject ? `/projet/${relatedProject.slug}` : undefined}
+            backPath="/blog"
+            backLabel={t('blog.back')}
+            onNavigate={onNavigate}
+          />
         </FadeInText>
       </section>
     </SlideUp>

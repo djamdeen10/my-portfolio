@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
 import { ThemeProvider } from './components/ThemeProvider.jsx';
 import { SiteNav } from './components/layout/SiteNav.jsx';
@@ -7,12 +7,16 @@ import { QuickNav } from './components/layout/QuickNav.jsx';
 import { QuoteCard } from './components/layout/QuoteCard.jsx';
 import { ContactCta } from './components/layout/ContactCta.jsx';
 import HomePage from './pages/home/HomePage.jsx';
-import ProjectsPage from './pages/project/ProjectsPage.jsx';
-import ProjectDetailPage from './pages/project/ProjectDetailPage.jsx';
-import ContactPage from './pages/contact/ContactPage.jsx';
-import BlogPage from './pages/blog/BlogPage.jsx';
-import BlogPostPage from './pages/blog/BlogPostPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
+
+// Keep the landing page in the critical bundle. Every other route is split
+// so a visitor reading the home page never downloads the project, blog,
+// contact and 404 implementations before they need them.
+const ProjectsPage = lazy(() => import('./pages/project/ProjectsPage.jsx'));
+const ProjectDetailPage = lazy(() => import('./pages/project/ProjectDetailPage.jsx'));
+const ContactPage = lazy(() => import('./pages/contact/ContactPage.jsx'));
+const BlogPage = lazy(() => import('./pages/blog/BlogPage.jsx'));
+const BlogPostPage = lazy(() => import('./pages/blog/BlogPostPage.jsx'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 import { useI18n } from './i18n/LanguageProvider.jsx';
 import { useAppRouter } from './lib/router.js';
 import { buildPageSeo } from './lib/seo.js';
@@ -33,6 +37,7 @@ const PAGES = {
 export default function App() {
   const { route, navigate } = useAppRouter();
   const { content, locale, t } = useI18n();
+  const firstPageRender = useRef(true);
   const { blogPosts, projects } = content;
 
   const Page = PAGES[route.id] ?? NotFoundPage;
@@ -67,14 +72,13 @@ export default function App() {
     applySeo(seo);
   }, [seo]);
 
+  useEffect(() => {
+    firstPageRender.current = false;
+  }, []);
+
   return (
     <ThemeProvider>
-      <m.div
-        className="usw-liquid min-h-dvh"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.22, ease: PAGE_EASE }}
-      >
+      <div className="usw-liquid min-h-dvh">
         <DesktopSidebar active={activeSection} onNavigate={navigate} />
 
         <main className="app-shell-main bg-grid min-h-dvh pb-32 pt-6 dark:bg-neutral-950 lg:pb-16 lg:pl-[261px] lg:pr-[26px] lg:pt-12 xl:pl-[287px]">
@@ -84,7 +88,7 @@ export default function App() {
             <AnimatePresence mode="wait" initial={false}>
               <m.div
                 key={`${route.id}:${route.slug ?? ''}`}
-                initial={{ opacity: 0, y: 10 }}
+                initial={firstPageRender.current ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.2, ease: PAGE_EASE }}
@@ -94,7 +98,9 @@ export default function App() {
                   className="relative rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950"
                 >
                   <div className="p-4 md:p-6 lg:p-7">
-                    <Page onNavigate={navigate} slug={route.slug} />
+                    <Suspense fallback={<div className="min-h-[40vh]" aria-busy="true" />}>
+                      <Page onNavigate={navigate} slug={route.slug} />
+                    </Suspense>
                   </div>
 
                   {route.id !== 'contact' && route.id !== 'not-found' ? (
@@ -109,7 +115,7 @@ export default function App() {
 
           <QuickNav active={activeSection} onNavigate={navigate} />
         </main>
-      </m.div>
+      </div>
     </ThemeProvider>
   );
 }

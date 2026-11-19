@@ -323,13 +323,13 @@ function renderShell({ seo, locale, route, content, project, post, assets, theme
     ${renderMeta(seo)}
     ${linkTag('manifest', '/site.webmanifest')}
     ${linkTag('alternate', '/rss.xml', { type: 'application/rss+xml', title: 'Djam Deen — Blog' })}
-    <link rel="shortcut icon" href="/avatar.jpg" />
-    <link rel="icon" href="/avatar.jpg" />
-    <link rel="apple-touch-icon" href="/avatar.jpg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#fafafa" />
     <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preconnect" href="https://flagcdn.com" crossorigin />
+    <link rel="preconnect" href="https://flagcdn.com" />
+    <link rel="preconnect" href="https://free.freeipapi.com" crossorigin />
     <script>${themeScript}</script>
     ${isNotFound ? '' : renderJsonLd(seo)}
     ${assets.stylesheet}

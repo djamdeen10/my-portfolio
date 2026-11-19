@@ -22,7 +22,7 @@ export function SiteNav({ onNavigate }) {
           onClick={goHome}
           className="font-semibold text-neutral-900 dark:text-neutral-50"
         >
-          {profile.handle}.
+          {profile.wordmark}.
         </a>
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Reserve the chip's width so the geo lookup never shifts the

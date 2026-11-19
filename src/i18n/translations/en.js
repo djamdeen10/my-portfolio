@@ -31,7 +31,6 @@ export default {
     theme: { light: 'Switch to the light theme', dark: 'Switch to the dark theme' },
     sidebar: {
       nav: 'Main navigation',
-      bio: ['Backend Dev', 'AI-Assisted Product Builder', 'FC Barcelona Fan', 'Cats Lover'],
     },
     hero: {
       intro: 'hi, I am',
@@ -415,7 +414,7 @@ The Professor will save you with a plan so clean that you won’t even need to u
       },
       {
         q: 'Which technologies does Djam Deen use?',
-        a: 'TypeScript, React, Next.js, Node.js, Hono, Python, FastAPI, PostgreSQL, SQLite, Cloudflare, Vite, Vitest, and AI tools such as Claude, DeepSeek and ChatGPT. The stack is chosen per problem, not the other way round.',
+        a: 'TypeScript, React, Next.js, Node.js, Hono, Python, FastAPI, PostgreSQL, SQLite, Cloudflare, Vite, Vitest, and AI tools such as Claude and DeepSeek. The stack is chosen per problem, not the other way round.',
       },
       {
         q: 'How does AgentMob handle privacy and security?',

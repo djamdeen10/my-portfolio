@@ -1,6 +1,7 @@
 import { useI18n } from '../../i18n/LanguageProvider.jsx';
 import { FadeInText, SlideUp } from '../../components/ui/Animations.jsx';
 import { CoverArt } from '../../components/ui/CoverArt.jsx';
+import { PageLinks } from '../../components/ui/PageLinks.jsx';
 import { ExternalLink, Github } from '../../components/ui/Icons.jsx';
 import { StackChip } from '../../components/ui/StackChip.jsx';
 
@@ -111,7 +112,7 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
                 ) : null}
               </div>
 
-              <h3 className={sectionLabelClass}>{t('project.about')}</h3>
+              <h2 className={sectionLabelClass}>{t('project.about')}</h2>
               <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
                 {project.description}
               </p>
@@ -119,7 +120,7 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
 
             {project.stack?.length ? (
               <FadeInText delay={0.3}>
-                <h3 className={sectionLabelClass}>{t('project.stack')}</h3>
+                <h2 className={sectionLabelClass}>{t('project.stack')}</h2>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {project.stack.map((label) => (
                     <StackChip key={label} label={label} />
@@ -130,7 +131,7 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
 
             {project.highlights?.length ? (
               <FadeInText delay={0.35}>
-                <h3 className={sectionLabelClass}>{t('project.bricks')}</h3>
+                <h2 className={sectionLabelClass}>{t('project.bricks')}</h2>
                 <dl className="mt-2 grid gap-2 sm:grid-cols-2">
                   {project.highlights.map((item) => (
                     <div
@@ -154,9 +155,9 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
         {project.body?.length ? (
           <FadeInText delay={0.35}>
             <div className="mt-6 max-w-[72ch] border-t border-neutral-200 pt-5 dark:border-neutral-800">
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
+              <h2 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
                 {t('project.body')}
-              </h3>
+              </h2>
               {project.body.map((paragraph, index) => (
                 <p
                   key={index}
@@ -170,28 +171,21 @@ export default function ProjectDetailPage({ slug, onNavigate }) {
         ) : null}
 
         <FadeInText delay={0.4}>
-          <div className="mt-6 flex max-w-[72ch] flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
-            {relatedPost ? (
-              <a
-                href={localizedPath(`/blog/${relatedPost.slug}`)}
-                className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-              >
-                {t('routeTitles.blogDetail')} · {relatedPost.title} →
-              </a>
-            ) : null}
-            <a
-              href={localizedPath('/projet')}
-              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-            >
-              {t('project.back')}
-            </a>
-            <a
-              href={localizedPath('/contact')}
-              className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
-            >
-              {t('nav.contact')} →
-            </a>
-          </div>
+          <PageLinks
+            related={
+              relatedPost
+                ? {
+                    kind: 'article',
+                    eyebrow: t('routeTitles.blogDetail'),
+                    title: relatedPost.title,
+                  }
+                : null
+            }
+            relatedPath={relatedPost ? `/blog/${relatedPost.slug}` : undefined}
+            backPath="/projet"
+            backLabel={t('project.back')}
+            onNavigate={onNavigate}
+          />
         </FadeInText>
       </section>
     </SlideUp>

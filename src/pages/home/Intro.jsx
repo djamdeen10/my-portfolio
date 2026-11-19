@@ -1,5 +1,4 @@
 import { useI18n } from '../../i18n/LanguageProvider.jsx';
-import { FadeInText } from '../../components/ui/Animations.jsx';
 
 const linkClass =
   'font-medium text-neutral-900 underline decoration-neutral-400 underline-offset-[3px] transition-colors hover:decoration-neutral-900 dark:text-neutral-100 dark:decoration-neutral-500 dark:hover:decoration-neutral-100';
@@ -37,8 +36,7 @@ export default function Intro() {
   const { intro } = content.ui;
 
   return (
-    <FadeInText delay={0.3}>
-      <section className="m-2 mt-4 text-[13px] leading-6 text-neutral-600 lg:max-w-[72ch] xl:max-w-none dark:text-neutral-300">
+    <section className="m-2 mt-4 text-[13px] leading-6 text-neutral-600 lg:max-w-[72ch] xl:max-w-none dark:text-neutral-300">
         <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
           {intro.greeting}
         </p>
@@ -52,7 +50,6 @@ export default function Intro() {
             </p>
           ))}
         </div>
-      </section>
-    </FadeInText>
+    </section>
   );
 }
